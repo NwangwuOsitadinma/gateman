@@ -1,0 +1,22 @@
+{
+  "name": "gateman",
+  "version": "1.0.0",
+  "description": "Gateman is package for handling user authorization in node-mongo applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "run tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NwangwuOsitadinma/gateman.git"
+  },
+  "keywords": [
+    "authorization"
+  ],
+  "author": "Nwangwu Ositadinma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NwangwuOsitadinma/gateman/issues"
+  },
+  "homepage": "https://github.com/NwangwuOsitadinma/gateman#readme"
+}
