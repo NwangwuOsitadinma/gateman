@@ -8,21 +8,27 @@ class GateMan {
     createClaim(claimName,cb){
         claim.create(claimName,cb);
     }
+
     createRole(roleName,cb){
         role.create(roleName,cb);
     }
 
-    assignRoleToUser(role,user,cb){
-        userRole.create({role:role._id,user:user._id},cb);
+    allow(roleName){
+        $r = role.where('name',roleName);
+        if($r !== null){
+            return $r;
+        }
+        role.create(roleName,function(err,role){
+            if(err) throw err;
+            return role;
+        });
+    }
+    dissallow(roleName){
+        $r = role.where('name',roleName);
+        return $r;
     }
 
-    assignClaimToUser(claim,user,cb){
-        userClaim.create({claim:claim._id, user:user._id},cb);
-    }
 
-    assignClaimToRole(claim,role,cb){
-        userClaim.create({claim:claim._id, role: role._id},cb);
-    }
 
 
 }
