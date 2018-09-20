@@ -4,7 +4,7 @@ var ClaimSchema = mongoose.Schema({
     name: {
         type: String,
         required: [true,'Sorry, the claim is required'],
-        unique: [true,'Sorry, this claim already exists']
+        unique: true
     }
 })
 
