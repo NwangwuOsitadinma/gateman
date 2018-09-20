@@ -2,7 +2,12 @@ const mongoose = require('mongoose');
 
 var RoleClaimSchema = mongoose.Schema({
     role: {
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
+    claim: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     }
 })
 
