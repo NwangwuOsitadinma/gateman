@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/NwangwuOsitadinma/gateman/issues"
   },
-  "homepage": "https://github.com/NwangwuOsitadinma/gateman#readme"
+  "homepage": "https://github.com/NwangwuOsitadinma/gateman#readme",
+  "dependencies": {
+    "mongoose": "^5.2.12"
+  }
 }
