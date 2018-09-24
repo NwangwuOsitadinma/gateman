@@ -6,11 +6,11 @@ const userRole = require('./Models/UserRole');
 
 class GateMan {
     createClaim(claimName,cb){
-        claim.create(claimName,cb);
+        claim.create({name: claimName},cb);
     }
 
     createRole(roleName,cb){
-        role.create(roleName,cb);
+        role.create({name: roleName},cb);
     }
 
     assign(roleName){
@@ -34,7 +34,7 @@ class GateMan {
             if(r !== null){
                 return r;
             }
-            role.create(roleName,function(err,role){
+            role.create({name: roleName},function(err,role){
                 if(err) throw err;
                 return role;
             });
@@ -47,8 +47,6 @@ class GateMan {
         var r = role.where('name',roleName);
         return r;
     }
-
-
-
-
 }
+
+module.exports = GateMan;
