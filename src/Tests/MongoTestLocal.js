@@ -15,12 +15,12 @@ app.listen(3000, function(err){
 
 app.get('/newClaim', newClaim);
 
-function newClaim(){
-    myGateMan.createClaim('canCreate', function(err, claim){
+function newClaim(req, res){
+    myGateMan.createClaim(req.query.name, function(err, claim){
         if (err) { 
-            console.log(err);
+            res.json({err: err});
         } else {
-            console.log("Success -> " + claim);
+            res.json({message: "Claim created successfully"});
         }
     });
 }
