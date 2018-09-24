@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/NwangwuOsitadinma/gateman#readme",
   "dependencies": {
+    "express": "^4.16.3",
     "mongoose": "^5.2.12"
   }
 }
