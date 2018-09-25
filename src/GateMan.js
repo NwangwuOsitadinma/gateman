@@ -3,8 +3,11 @@ const claim = require('./Models/Claim');
 const roleClaim = require('./Models/RoleClaim');
 const userClaim = require('./Models/UserClaim');
 const userRole = require('./Models/UserRole');
+const hasRoleAndAbilities = require('./HasRolesAndAbilities');
+
 
 class GateMan {
+
     createClaim(claimName,cb){
         claim.create({name: claimName},cb);
     }
@@ -21,11 +24,11 @@ class GateMan {
       role.create({name: roleName},function(err,role){
           if(err) throw err;
           return role;
-      })
+      });
     }
 
     retract(roleName){
-
+       
     }
 
     allow(roleNameorUser){
@@ -34,19 +37,26 @@ class GateMan {
             if(r !== null){
                 return r;
             }
-            role.create({name: roleName},function(err,role){
+            role.create({name: roleName},(err,role)=>{
                 if(err) throw err;
                 return role;
             });
         } else{
-            return roleNameorUser
+            return roleNameorUser;
         }
+       
     }
 
     dissallow(roleName){
         var r = role.where('name',roleName);
         return r;
     }
+
+    // to(claimName){
+    //     const rolesAndAbilities = new hasRoleAndAbilities(this);
+    //     return rolesAndAbilities.to(claimName);
+    // }
+
 }
 
 module.exports = GateMan;
