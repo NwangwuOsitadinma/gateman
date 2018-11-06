@@ -2,7 +2,7 @@ var GateMan = require('../GateMan');
 var rolesAndAbilities = require('../HasRolesAndAbilities');
 var mongoose = require('mongoose');
 var express = require('express');
-
+var role = require('../Models/Role')
 var app = express();
 
 mongoose.Promise = global.Promise;
@@ -41,6 +41,11 @@ function newRole(req, res){
 
 app.get('/newClaim', newClaim);
 app.get('/newRole', newRole);
+app.get('/assignClaim', (req, res)=>{
+    role.create({name: 'accountant'}, (err,role)=>{
+        myGateMan.allow(role).to('edit');
+    })
+});
 app.get('/assign/:name', (req, res)=>{
     User.create({name: req.params.name}, function(err, user){
         res.json(200, myGateMan.allow(user).to('edit'));
