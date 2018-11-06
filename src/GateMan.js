@@ -4,7 +4,8 @@ const roleClaim = require('./Models/RoleClaim');
 const userClaim = require('./Models/UserClaim');
 const userRole = require('./Models/UserRole');
 const hasRoleAndAbilities = require('./HasRolesAndAbilities');
-
+var deasync = require('deasync');
+var mongo = require('mongoose')
 
 class GateMan {
 
@@ -31,20 +32,17 @@ class GateMan {
        
     }
 
+    /**
+     * Allows members of a role or a user to perform a claim
+     * @param {A mongoose object} roleNameorUser 
+     */
     allow(roleNameorUser){
-        if(typeof roleNameorUser === String ){
-            var r = role.where('name',roleName);
-            if(r !== null){
-                return r;
-            }
-            role.create({name: roleName},(err,role)=>{
-                if(err) throw err;
-                return role;
-            });
-        } else{
-            return roleNameorUser;
-        }
-       
+        /*
+         * Once we return the roleNameorUser object, mongoose automatically selects it's base model and calls it's respective to() function.
+         */
+        console.log(roleNameorUser.modelName())//this should print the Model Name of its caller
+        console.log(role.modelName)//this should print Role
+        return roleNameorUser;
     }
 
     dissallow(roleName){
