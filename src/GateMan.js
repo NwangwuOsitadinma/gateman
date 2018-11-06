@@ -4,7 +4,6 @@ const roleClaim = require('./Models/RoleClaim');
 const userClaim = require('./Models/UserClaim');
 const userRole = require('./Models/UserRole');
 const hasRoleAndAbilities = require('./HasRolesAndAbilities');
-var deasync = require('deasync');
 var mongo = require('mongoose')
 
 class GateMan {
@@ -34,7 +33,7 @@ class GateMan {
 
     /**
      * Allows members of a role or a user to perform a claim
-     * @param {A mongoose object} roleNameorUser 
+     * @param {A mongoose object} roleNameorUser
      */
     allow(roleNameorUser){
         /*
