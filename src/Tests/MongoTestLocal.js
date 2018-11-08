@@ -43,9 +43,14 @@ app.get('/newClaim', newClaim);
 app.get('/newRole', newRole);
 app.get('/assignClaim', (req, res)=>{
     role.create({name: 'accountant'}, (err,role)=>{
-        myGateMan.allow(role).to('edit');
+        res.json({message: myGateMan.allow(role).to('edit')});
     })
 });
+app.get('/assignClaim/:name', (req, res)=>{
+    role.findOne({name: req.params.name}, (err, role)=>{
+        myGateMan.allow(role).to('edit');
+    });
+})
 app.get('/assign/:name', (req, res)=>{
     User.create({name: req.params.name}, function(err, user){
         res.json(200, myGateMan.allow(user).to('edit'));
