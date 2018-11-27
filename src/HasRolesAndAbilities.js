@@ -24,8 +24,17 @@ class HasRolesAndAbilities {
     modelName(){
         return 'User'
     }
-    from(){
-        
+    from(claimname){
+        console.log("HasRolesAndAbilities");
+        claim.where('name',claimname).limit(1).exec((err,c)=>{
+            if(c.length>0){
+                userClaim.deleteOne({user: this._id, claim: c._id},function(err){
+                    if(err) throw err;
+                })
+            }else{
+                return {message: "the claim does not exist"};
+            }
+        })
     }
 }
 
