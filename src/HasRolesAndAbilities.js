@@ -9,7 +9,7 @@ class HasRolesAndAbilities {
     }
 
    /**
-    * accepts a claim name and assigns it to the user
+    * accepts a claim name and assigns it to the user that calls it
     * @param {A string that represents the claim to be assigned} claimName 
     */ 
    to(claimName){
@@ -100,6 +100,10 @@ class HasRolesAndAbilities {
         })
     }
 
+    /**
+    * accepts a claim and assigns it to the user that calls it
+    * @param {A mongoose that represents the claim to be assigned} claim
+    */ 
     from(claimname){
         console.log("HasRolesAndAbilities");
         claim.where('name',claimname).limit(1).exec((err,c)=>{
