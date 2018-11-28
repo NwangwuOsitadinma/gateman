@@ -13,6 +13,13 @@ var RoleSchema = new mongoose.Schema({
 });
 
 class RoleMethods{
+    modelName(){
+        return 'Role'
+    }
+    /**
+     * either assigns claim to a role or role to user
+     * @param {pass a claim as a string if you called allow or a mongoose object as user if you called assign} claimOrUser 
+     */
     to (claimOrUser){
         console.log("Role TO was called")
         if (claimOrUser == null){
@@ -37,14 +44,32 @@ class RoleMethods{
         });
         } else{
             userRole.create({user:claimOrUser._id,role: this._id}, function(err,usrRole){
+                userRole.f
                 if(err) throw err;
                 return usrRole;
             })
         } 
-}
-    modelName(){
-        return 'Role'
     }
+    from(claimOrUser){
+        if(typeof(claimOrUser) === "string"){
+            claim.findOne({name:claimOrUser},(err,c) =>{
+                if(c.length>0){
+                    roleClaim.deleteOne({role:this._id,claim:c._id},(err) => {
+                        if (err) throw err;
+                        return true;
+                    })
+                }else{
+                    return false
+                }
+            })
+        } else{
+            userRole.create({user:claimOrUser._id,role:this._id},(err,rc)=>{
+                if(err) throw err;
+                return rc;
+            })
+        }
+    }
+
 }
 
 RoleSchema.loadClass(RoleMethods)
