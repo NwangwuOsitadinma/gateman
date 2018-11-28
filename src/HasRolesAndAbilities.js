@@ -116,6 +116,38 @@ class HasRolesAndAbilities {
             }
         })
     }
+
+    can(claimName){
+        claim.findOne({name: claimName},(err,c)=>{
+            if(c.length>0){
+                userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
+                    if(uc.length>0){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                })
+            } else{
+                return false;
+            }
+        })
+    }
+    cannot(claimName){
+        claim.findOne({name: claimName},(err,c)=>{
+            if(c.length>0){
+                userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
+                    if(uc.length>0){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                })
+            } else{
+                return false;
+            }
+        })
+    }
+
 }
 
 module.exports = HasRolesAndAbilities;
