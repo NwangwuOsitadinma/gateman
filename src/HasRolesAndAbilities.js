@@ -1,7 +1,7 @@
 const claim = require('./Models/Claim');
 const userClaim = require('./Models/UserClaim');
-const role = require('./Models/Role');
 const userRole =  require('./Models/UserRole');
+const role = require('./Models/Role');
 
 class HasRolesAndAbilities {
   
@@ -48,36 +48,44 @@ class HasRolesAndAbilities {
 
     /**
      * assigns a role to a user directly
-     * @param {A mongoose object that represents the role you want to assign to a user} role 
+     * @param {A string that represents the role you want to assign to a user} Role 
      */
-    assign(role){
-        userRole.findOne({user: this._id,role:role._id},(err,r)=>{
-            if(r.length>0){
-                return {message: 'this role has already been assigned to the user'};
-            } else{
-                userRole.create({user:this._id,role:r._id},function(err,ur){
-                    if(err) throw err;
-                    return ur;
-                })
+    assign(Role){
+        role.findOne({name: Role}, (err, role)=>{
+            if (role){
+                userRole.findOne({user: this._id,role:role._id},(err,r)=>{
+                    if(r){
+                        return {message: 'this role has already been assigned to the user'};
+                    } else{
+                        userRole.create({user:this._id,role:role._id},function(err,ur){
+                            if(err) throw err;
+                            return ur;
+                        });
+                    }
+                });
             }
-        })
+        });
     }
 
     /**
      * retracts a role from a user directly
-     * @param {A mongoose model that represents the role you want to retract from the user} role 
+     * @param {A string that represents the role you want to retract from the user} Role 
      */
-    retract(role){
-        userRole.findOne({user: this._id,claim:role._id},(err,ur) => {
-            if(ur.length>0){
-                userRole.deleteOne({user:this._id,claim:ur._id},(err) =>{
-                    if(err) throw err;
-                    return {message: 'the claim has been removed from the user'}
-                })
-            } else{
-                return{message: 'invalid action'}
+    retract(Role){
+        role.findOne({name: Role}, (err, role)=>{
+            if (role){
+                userRole.findOne({user: this._id,role:role._id},(err,r)=>{
+                    if(r){
+                        userRole.deleteOne({_id:r._id},(err) =>{
+                            if(err) throw err;
+                            return {message: 'the role has been removed from the user'}
+                        });
+                    } else{
+                        return{message: 'invalid action, user role does not exist'}
+                    }
+                });
             }
-        })
+        });
     }
 
     /**
