@@ -4,7 +4,7 @@ const role = require('./Models/Role');
 const userRole =  require('./Models/UserRole');
 
 class HasRolesAndAbilities {
-    modelName(){
+    description(){
         return 'User'
     }
 
@@ -13,7 +13,7 @@ class HasRolesAndAbilities {
     * @param {A string that represents the claim to be assigned} claimName 
     */ 
    to(claimName){
-       console.log("HasRolesAndAbilities")
+       console.log("HasRolesAndAbilities");
        claim.where('name', claimName).limit(1).exec((err, c)=>{
         if(c.length>0){
             userClaim.create({user: this._id, claim: c[0]._id},function(err,usrClaim){
@@ -26,8 +26,8 @@ class HasRolesAndAbilities {
                  userClaim.create({user: this._id,claim: clm._id},function(err,usrClaim){
                      if(err) throw err;
                      return usrClaim;
-                 })
-            })
+                 });
+            });
         }
        });
     }
