@@ -28,19 +28,22 @@ class HasRolesAndAbilities {
 
     /**
      * disallows a user from performing a particular claim
-     * @param {A mongoose object that represents the claim  you want to assign to a user} claim 
+     * @param {A string that represents the claim you want to retract from a user} claim 
      */
-    disallow(claim){
-        userClaim.findOne({user: this._id,claim:claim._id},(err,uc) => {
-            if(uc){
-                userClaim.deleteOne({user:this._id,claim:uc._id},(err) =>{
-                    if(err) throw err;
-                    return {message: 'the claim has been removed from the user'}
-                })
-            } else{
-                return{message: 'invalid action'}
+    disallow(Claim){
+        claim.findOne({name: Claim}, (err, claim)=>{
+            if (claim) {
+                userClaim.findOne({user: this._id,claim:claim._id},(err,uc) => {
+                    if(uc){
+                        userClaim.deleteOne({_id:uc._id}, (err)=>{
+                            return {message: 'the claim has been removed from the user'};
+                        });
+                    } else{
+                        return{message: 'invalid action, user claim does not exist'}
+                    }
+                });
             }
-        })
+        });
     }
 
     /**
