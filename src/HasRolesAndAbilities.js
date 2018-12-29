@@ -8,30 +8,6 @@ class HasRolesAndAbilities {
         return 'User'
     }
 
-   /**
-    * accepts a claim name and assigns it to the user that calls it
-    * @param {A string that represents the claim to be assigned} claimName 
-    */ 
-   to(claimName){
-       console.log("HasRolesAndAbilities");
-       claim.where('name', claimName).limit(1).exec((err, c)=>{
-        if(c.length>0){
-            userClaim.create({user: this._id, claim: c[0]._id},function(err,usrClaim){
-                if(err) throw err;
-                return usrClaim;
-            });
-        }else{
-            claim.create({name:claimName},(err,clm) =>{
-                 if(err) throw err;
-                 userClaim.create({user: this._id,claim: clm._id},function(err,usrClaim){
-                     if(err) throw err;
-                     return usrClaim;
-                 });
-            });
-        }
-       });
-    }
-
     /**
      * assigns the given claim to the user on which it is called
      * @param {A mongoose object that represents the claim  you want to assign to a user} claim 
@@ -96,23 +72,6 @@ class HasRolesAndAbilities {
                 })
             } else{
                 return{message: 'invalid action'}
-            }
-        })
-    }
-
-    /**
-    * accepts a claim and assigns it to the user that calls it
-    * @param {A mongoose that represents the claim to be assigned} claim
-    */ 
-    from(claimname){
-        console.log("HasRolesAndAbilities");
-        claim.where('name',claimname).limit(1).exec((err,c)=>{
-            if(c.length>0){
-                userClaim.deleteOne({user: this._id, claim: c._id},function(err){
-                    if(err) throw err;
-                })
-            }else{
-                return {message: "the claim does not exist"};
             }
         })
     }
