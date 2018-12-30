@@ -2,6 +2,7 @@ const claim = require('./Models/Claim');
 const userClaim = require('./Models/UserClaim');
 const userRole =  require('./Models/UserRole');
 const role = require('./Models/Role');
+var async = require('async')
 
 class HasRolesAndAbilities {
   
@@ -89,41 +90,27 @@ class HasRolesAndAbilities {
     }
 
     /**
-    * accepts a claim and assigns it to the user that calls it
-    * @param {A mongoose that represents the claim to be assigned} claim
-    */ 
-    from(claimname){
-        console.log("HasRolesAndAbilities");
-        claim.where('name',claimname).limit(1).exec((err,c)=>{
-            if(c.length>0){
-                userClaim.deleteOne({user: this._id, claim: c._id},function(err){
-                    if(err) throw err;
-                })
-            }else{
-                return {message: "the claim does not exist"};
-            }
-        })
-    }
-
-    /**
      * checks whether a user has the ability to perform an action
      * @param {a string representing the claim name} claimName 
      */
     can(claimName){
-        claim.findOne({name: claimName},(err,c)=>{
-            if(c.length>0){
-                userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
-                    if(uc.length>0){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                })
-            } else{
-                return false;
-            }
-        })
+        return new Promise (resolve=>{
+            claim.findOne({name: claimName}, (err,c)=>{
+                if(c){
+                    userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
+                        if(uc){
+                            resolve(true);
+                        }else{
+                            resolve(false);
+                        }
+                    });
+                } else{
+                    resolve(false);
+                }
+            });
+        });
     }
+
     /**
      * checks whether a user does not have the ability to perform an action
      * @param {a string representing the claim name} claimName 
