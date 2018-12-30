@@ -18,8 +18,8 @@ var UserModel = new mongoose.Schema({
     name: String,
     phone: Number
 });
-// UserModel.loadClass(rolesAndAbilities);
-//var User = mongoose.model('User', UserModel);
+UserModel.loadClass(rolesAndAbilities);
+var User = mongoose.model('Person', UserModel);
 
 app.get('/allowRole/:role', (req, res)=>{
     myGateMan.Roles.createRole(req.params.role, (err, role)=>{
@@ -34,9 +34,12 @@ app.get('/roles', (req, res)=>{
         res.json(data);
     });
 });
-app.get('/c', (req, res)=>{
-
-    myGateMan.getRoleClaims('accountant', (err, data)=>{
-        res.json(data);
+app.get('/c/:claim', (req, res)=>{
+    User.findOne({name: "ibe", phone: 090909}, (err, user)=>{
+        // var k = user.can("edit");
+        // console.log(k)
+        var a = await user.can(req.params.claim)//still not fluent
+        console.log(a);
+        res.json(a);
     });
 });
