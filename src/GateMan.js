@@ -1,10 +1,6 @@
 const role = require('./Models/Role');
 const claim = require('./Models/Claim');
 const roleClaim = require('./Models/RoleClaim');
-const userClaim = require('./Models/UserClaim');
-const userRole = require('./Models/UserRole');
-const hasRoleAndAbilities = require('./HasRolesAndAbilities');
-const mongoose = require('mongoose');
 
 class GateMan {
 
