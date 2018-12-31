@@ -128,13 +128,6 @@ class GateMan {
         claim.find({}, cb);
     }
 
-    getRolesForUser(user){
-        //Can't work here, should belong to hasRolesAndAbilities because user model is explicitly defined by the developer.
-    }
-
-    getClaimsForUser(user){
-        //Can't work here, should belong to hasRolesAndAbilities because user model is explicitly defined by the developer.
-    }
 
     /**
      * Returns an array of claims a role can perform

@@ -2,7 +2,6 @@ const claim = require('./Models/Claim');
 const userClaim = require('./Models/UserClaim');
 const userRole =  require('./Models/UserRole');
 const role = require('./Models/Role');
-var async = require('async')
 
 class HasRolesAndAbilities {
   
@@ -209,6 +208,14 @@ class HasRolesAndAbilities {
                 return true;
             }
         })
+    }
+
+    getRolesForUser(cb){
+        userRole.find({},cb)
+    }
+
+    getClaimsForUser(cb){
+        userClaim.find({},cb)
     }
 }
 
