@@ -107,27 +107,33 @@ class HasRolesAndAbilities {
                     resolve(false);
                 }
             });
+        }, reject=>{
+            reject("Error, user or claim does not exist");
         });
     }
 
     /**
      * checks whether a user does not have the ability to perform an action
-     * @param {a string representing the claim name} claimName 
+     * @param {a string representing the claim name} claimName
      */
     cannot(claimName){
-        claim.findOne({name: claimName},(err,c)=>{
-            if(c.length>0){
-                userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
-                    if(uc.length>0){
-                        return false;
-                    }else{
-                        return true;
-                    }
-                })
-            } else{
-                return true;
-            }
-        })
+        return new Promise (resolve=>{
+            claim.findOne({name: claimName}, (err,c)=>{
+                if(c){
+                    userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
+                        if(uc){
+                            resolve(false);
+                        }else{
+                            resolve(true);
+                        }
+                    });
+                } else{
+                    resolve(true);
+                }
+            });
+        }, reject=>{
+            reject("Error, user or claim does not exist");
+        });
     }
 
     /**
@@ -135,19 +141,23 @@ class HasRolesAndAbilities {
      * @param {A string representing the role name} roleName 
      */
     isA(roleName){
-        role.findOne({name:roleName},(err,r) =>{
-            if(r.length>0){
-                userRole.findOne({user:this._id,role:r._id},(err,ur)=>{
-                    if(ur.length>0){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                })
-            }else{
-                return false;
-            }
-        })
+        return new Promise (resolve=>{
+            role.findOne({name: roleName}, (err,r)=>{
+                if(r){
+                    userRole.findOne({user:this._id,role:r._id},(err,ur)=>{
+                        if(ur){
+                            resolve(true);
+                        }else{
+                            resolve(false);
+                        }
+                    });
+                } else{
+                    resolve(false);
+                }
+            });
+        }, reject=>{
+            reject("Error, user or role does not exist");
+        });
     }
 
     /**
@@ -155,19 +165,7 @@ class HasRolesAndAbilities {
      * @param {A string representing the role name} roleName 
      */
     isAn(roleName){
-        role.findOne({name:roleName},(err,r) =>{
-            if(r.length>0){
-                userRole.findOne({user:this._id,role:r._id},(err,ur)=>{
-                    if(ur.length>0){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                })
-            }else{
-                return false;
-            }
-        })
+        return this.isA(roleName);
     }
 
     /**
@@ -175,19 +173,23 @@ class HasRolesAndAbilities {
      * @param {A string representing the role name} roleName 
     */
     isNotA(roleName){
-        role.findOne({name:roleName},(err,r) =>{
-            if(r.length>0){
-                userRole.findOne({user:this._id,role:r._id},(err,ur)=>{
-                    if(ur.length>0){
-                        return false;
-                    }else{
-                        return true;
-                    }
-                })
-            }else{
-                return true;
-            }
-        })
+        return new Promise (resolve=>{
+            role.findOne({name: roleName}, (err,r)=>{
+                if(r){
+                    userRole.findOne({user:this._id,role:r._id},(err,ur)=>{
+                        if(ur){
+                            resolve(false);
+                        }else{
+                            resolve(true);
+                        }
+                    });
+                } else{
+                    resolve(true);
+                }
+            });
+        }, reject=>{
+            reject("Error, user or role does not exist");
+        });
     }
 
     /**
@@ -195,19 +197,7 @@ class HasRolesAndAbilities {
      * @param {A string representing the role name} roleName 
     */
     isNotAn(roleName){
-        role.findOne({name:roleName},(err,r) =>{
-            if(r.length>0){
-                userRole.findOne({user:this._id,role:r._id},(err,ur)=>{
-                    if(ur.length>0){
-                        return false;
-                    }else{
-                        return true;
-                    }
-                })
-            }else{
-                return true;
-            }
-        })
+       return this.isNotA(roleName);
     }
 
     getRolesForUser(cb){
