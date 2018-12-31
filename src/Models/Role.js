@@ -1,8 +1,4 @@
 const mongoose = require('mongoose');
-const roleClaim = require('./RoleClaim');
-const userRole = require('./UserRole');
-const claim = require('./Claim');
-var rolesAndAbilities = require('../HasRolesAndAbilities');
 
 var RoleSchema = new mongoose.Schema({
     name: {
@@ -12,7 +8,5 @@ var RoleSchema = new mongoose.Schema({
     }
 });
 
-
-//RoleSchema.loadClass(RoleMethods);
 
 module.exports = mongoose.model('Role',RoleSchema);
