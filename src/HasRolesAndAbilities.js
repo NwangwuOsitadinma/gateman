@@ -1,11 +1,18 @@
-const claim = require('./Models/Claim');
-const userClaim = require('./Models/UserClaim');
-const userRole =  require('./Models/UserRole');
-const role = require('./Models/Role');
+var userClaim = require('./Models/UserClaim');
+var userRole =  require('./Models/UserRole');
+var role = require('./Models/Role');
+var claim = require('./Models/Claim');
 
 class HasRolesAndAbilities {
-    description(){
-        return 'User'
+    /**
+     * Provide a valid mongoose connection object that will be used to store application credentials
+     * @param {A mongoose connection object} mongoose 
+     */
+    constructor(mongoose){
+        userClaim = userClaim(mongoose);
+        userRole = userRole(mongoose);
+        role = role(mongoose);
+        claim = claim(mongoose);
     }
 
     /**

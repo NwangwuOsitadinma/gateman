@@ -1,8 +1,18 @@
-const role = require('./Models/Role');
-const claim = require('./Models/Claim');
-const roleClaim = require('./Models/RoleClaim');
+var role = require('./Models/Role');
+var claim = require('./Models/Claim');
+var roleClaim = require('./Models/RoleClaim');
 
 class GateMan {
+
+    /**
+     * Provide a valid mongoose connection object that will be used to store application credentials
+     * @param {A mongoose connection object} mongoose 
+     */
+    constructor(mongoose){
+        role = role(mongoose);
+        claim = claim(mongoose);
+        roleClaim = roleClaim(mongoose);
+    }
 
      /**
      * @param {A string that represents the name of the claim you want to create} roleName
