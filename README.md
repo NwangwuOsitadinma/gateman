@@ -21,8 +21,8 @@ Usage
 
 
 ## Documentation
-[Usage](/docs/index.html): how Gateman.js works
-[Configuring Gateman.js]()
+* [Usage](http://htmlpreview.github.com/?https://github.com/NwangwuOsitadinma/gateman/blob/chaining/docs/index.html): how Gateman.js works
+* [Configuring Gateman.js]()
 
 
 ## Contributing
