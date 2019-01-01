@@ -1,4 +1,4 @@
-![Gateman logo](/docs/assets/gateman.jpeg "Gatemanjs")
+<img src="/docs/assets/gateman.jpeg" alt="gatemanjs" width="400" height="300"/>
 # Gateman.js
 
 Gatemanjs is package for handling user authorization in node-mongo applications.
