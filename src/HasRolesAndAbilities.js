@@ -86,7 +86,7 @@ class HasRolesAndAbilities {
             if (role){
                 userRole.findOne({user: this._id,role:role._id},(err,ur) => {
                     if(ur){
-                        userRole.deleteOne({user:this._id,role:ur._id},(err) =>{
+                        userRole.deleteOne({_id:ur._id},(err) =>{
                         if(err) throw err;
                         return {message: 'the role has been retracted from the user'}
                     });
