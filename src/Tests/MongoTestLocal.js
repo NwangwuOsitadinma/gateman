@@ -43,8 +43,11 @@ app.get('/c/:claim', (req, res)=>{
         // var k = user.can("edit");
         // console.log(k)
         //user.assign("teacher");
-        var a = await user.isNotAn(req.params.claim)//still not fluent
+        if (user){
+            var a = await user.isNotAn(req.params.claim)//still not fluent
         console.log(a);
         res.json(a);
+        }
+        
     });
 });
