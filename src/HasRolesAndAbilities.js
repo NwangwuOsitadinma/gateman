@@ -82,8 +82,8 @@ class HasRolesAndAbilities {
      * @param {A string that represents the role you want to retract from the user} Role 
      */
     retract(role){
-        userRole.findOne({user: this._id,claim:role._id},(err,ur) => {
-            if(ur.length>0){
+        userRole.findOne({user: this._id,role:role._id},(err,ur) => {
+            if(ur){
                 userRole.deleteOne({user:this._id,claim:ur._id},(err) =>{
                     if(err) throw err;
                     return {message: 'the claim has been removed from the user'}
@@ -200,11 +200,11 @@ class HasRolesAndAbilities {
     }
 
     getRolesForUser(cb){
-        userRole.find({},cb)
+        return userRole.find({},cb)
     }
 
     getClaimsForUser(cb){
-        userClaim.find({},cb)
+        return userClaim.find({},cb)
     }
 }
 
