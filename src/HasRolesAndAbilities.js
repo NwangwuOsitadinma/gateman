@@ -20,7 +20,7 @@ class HasRolesAndAbilities {
      * @param {A string that represents the claim  you want to assign to a user} claim 
      */
 
-  allow(claim){
+  allow(claimName){
         return new Promise ((resolve,reject)=>{
             claim.findOne({name: claimName}, (err, claim)=>{
                 if(claim){
