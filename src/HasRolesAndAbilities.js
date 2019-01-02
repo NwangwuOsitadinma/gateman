@@ -250,12 +250,12 @@ class HasRolesAndAbilities {
        return this.isNotA(roleName);
     }
 
-    getRolesForUser(cb){
-        return userRole.find({},cb)
+    getRolesForUser(userId, cb){
+        return userRole.find({user:userId},cb)
     }
 
-    getClaimsForUser(cb){
-        return userClaim.find({},cb)
+    getClaimsForUser(userId, cb){
+        return userClaim.find({user:userId},cb)
     }
 }
 
