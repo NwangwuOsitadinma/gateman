@@ -19,20 +19,33 @@ class HasRolesAndAbilities {
      * allows a user perform a claim, does nothing if user already has the claim
      * @param {A string that represents the claim  you want to assign to a user} claim 
      */
-    allow(Claim){
-        claim.findOne({name: Claim}, (err, claim)=>{
-            if (claim) {
-                userClaim.findOne({user: this._id,claim:claim._id},(err,uc) => {
-                    if(uc){
-                        return {message: 'this claim has already been assigned to this user'};
-                    } else{
-                        userClaim.create({user:this._id,claim:claim._id},(err,usrClaim) => {
-                            if(err) throw err;
-                            return usrClaim;
-                        });
-                    }
-                });
-            }
+
+  allow(claim){
+        return new Promise ((resolve,reject)=>{
+            claim.findOne({name: claimName}, (err, claim)=>{
+                if(claim){
+                    userClaim.findOne({user:this._id,claim:claim._id},(e,uc)=>{
+                        if(e){
+                            reject(e)
+                        }
+                        else if(uc){
+                            reject({
+                                message: "this claim was already assigned to the user"
+                            });
+                        } else{
+                            userClaim.create({user:this._id,claim:claim._id},(err,usrClaim) => {
+                                if(err) reject(err);
+                                resolve(usrClaim);
+                            });
+                        }
+                        
+                    });
+                } else{
+                    reject({
+                        message: "The claim does not exist. Consider creating it first"
+                    });
+                }
+            });
         });
     }
 
