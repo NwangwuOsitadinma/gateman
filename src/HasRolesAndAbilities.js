@@ -1,6 +1,7 @@
 var userClaim = require('./Models/UserClaim');
 var userRole =  require('./Models/UserRole');
 var role = require('./Models/Role');
+var roleClaim = require('./Models/RoleClaim');
 var claim = require('./Models/Claim');
 
 class HasRolesAndAbilities {
@@ -154,10 +155,50 @@ class HasRolesAndAbilities {
             claim.findOne({name: claimName}, (err,c)=>{
                 if(c){
                     userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
+                        var 
                         if(uc){
                             resolve(true);
                         }else{
                             resolve(false);
+                        }
+                    });
+                } else{
+                    reject("Error, user or claim does not exist");
+                }
+            });
+        });
+    }
+
+    testCan(claimName){
+        return new Promise ((resolve,reject)=>{
+            claim.findOne({name: claimName}, (err,c)=>{
+                if(c){
+                    userRole.find({user:this._id},(e,ur) =>{
+                        if(e){
+                            reject(e)
+                        } 
+                        else if(ur){
+                            ur.foreach((u) => {
+                                roleClaim.findOne({role:u.role,claim:claimName},(err,rc)=>{
+                                    if(err){
+                                        reject(err)
+                                    }
+                                    else if(rc){
+                                        resolve(true);
+                                    }else{
+                                        userClaim.findOne({user:u.user,claim:claimName},(err,uc)=>{
+                                            if(err){
+                                                reject(err);
+                                            }
+                                            else if(uc){
+                                                resolve (true);
+                                            }else{
+                                                resolve(false);
+                                            }
+                                        })
+                                    }
+                                });
+                            });
                         }
                     });
                 } else{
