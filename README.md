@@ -2,21 +2,44 @@
 
 # Gateman.js
 
-Gatemanjs is package for handling user authorization in node-mongo applications.
+Gatemanjs is an authorization system designed to manage roles and abilities in a node application that uses mongodb for data storage. It works together with mongoose to provide a fluent approach to managing roles and abilities.
 
+## Installation
 
-## Installing
-
-You can install the package using npm package manager 
+You can install gateman using npm package manager. 
 
 ```
 npm install gateman
 ```
-
-Usage
+Before using gateman in your node application, it is important to set up your User model to extend the HasRolesAndAbilities class from the gateman package.
 
 ```
-//Sample code of how gateman works
+const mogoose = require('mongoose');
+const hasRolesAndAbilities = require('gateman').hasRolesAndAbilities(mogoose);
+
+var UserSchema =  mongoose.Schema({
+    name: String,
+    email: String
+});
+
+UserSchema.loadClass(rolesAndAbilities);
+module.exports = mongoose.model('User',UserSchema)
+```
+
+After setting up your user model, you can call gateman methods on your user model.
+
+```
+userModel.assign(rolename);
+userModel.retract(rolename);
+```
+
+
+
+## Usage
+Adding roles and abilities to users is made extremely easy. You do not have to create a role or an ability in advance. Simply pass the name of the role/ability, and gateman will create it if it doesn't exist.
+
+```
+gateman.allow('role').to('ability');
 ```
 
 
