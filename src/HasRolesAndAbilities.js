@@ -82,22 +82,35 @@ class HasRolesAndAbilities {
 
     /**
      * assigns a role to a user directly
-     * @param {A string that represents the role you want to assign to a user} Role 
+     * @param {A string that represents the role you want to assign to a user} roleName 
      */
-    assign(Role){
-        role.findOne({name: Role}, (err, role)=>{
-            if (role){
-                userRole.findOne({user: this._id,role:role._id},(err,r)=>{
-                    if(r){
-                        return {message: 'this role has already been assigned to the user'};
-                    } else{
-                        userRole.create({user:this._id,role:role._id},function(err,ur){
-                            if(err) throw err;
-                            return ur;
-                        });
-                    }
-                });
-            }
+
+    assign(roleName){
+        return new Promise ((resolve,reject)=>{
+            role.findOne({name: roleName}, (err, role)=>{
+                if(role){
+                    userRole.findOne({user:this._id,claim:role._id},(e,rc)=>{
+                        if(e){
+                            reject(e)
+                        }
+                        else if(rc){
+                            reject({
+                                message: "this role was already assigned to the user"
+                            });
+                        } else{
+                            userRole.create({user:this._id,claim:role._id},(err,usrRole) => {
+                                if(err) reject(err);
+                                resolve(usrRole);
+                            });
+                        }
+                        
+                    });
+                } else{
+                    reject({
+                        message: "The role does not exist. Consider creating it first"
+                    });
+                }
+            });
         });
     }
 
