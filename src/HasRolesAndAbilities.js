@@ -89,7 +89,7 @@ class HasRolesAndAbilities {
         return new Promise ((resolve,reject)=>{
             role.findOne({name: roleName}, (err, role)=>{
                 if(role){
-                    userRole.findOne({user:this._id,claim:role._id},(e,rc)=>{
+                    userRole.findOne({user:this._id,role:role._id},(e,rc)=>{
                         if(e){
                             reject(e)
                         }
@@ -116,22 +116,33 @@ class HasRolesAndAbilities {
 
     /**
      * retracts a role from a user directly
-     * @param {A string that represents the role you want to retract from the user} Role 
+     * @param {A string that represents the role you want to retract from the user} roleName 
      */
-    retract(Role){
-        role.findOne({name: Role}, (err, role)=>{
-            if (role){
-                userRole.findOne({user: this._id,role:role._id},(err,ur) => {
-                    if(ur){
-                        userRole.deleteOne({_id:ur._id},(err) =>{
-                        if(err) throw err;
-                        return {message: 'the role has been retracted from the user'}
+    retract(roleName){
+        return new Promise((resolve,reject)=>{
+            role.findOne({name: roleName},(err,role)=>{
+                if(role){
+                    userRole.findOne({user:this._id,role:role._id},(e,rc)=>{
+                        if(e){
+                            reject(e)
+                        }else if(rc){
+                            userRole.delete({user:this._id,role:role._id},(err,usrRole)=>{
+                                if(err) reject(err);
+                                resolve(usrRole);
+                            });
+                        }else{
+                            reject({
+                                message: "this role was not assigned to the user"
+                            });
+                        }
                     });
-            } else{
-                    return{message: 'invalid action'}
-            }
-        })
-    }});
+                }else{
+                    reject({
+                        message: "The role does not exist. Consider creating it first"
+                    });
+                }
+            });
+        });
     }
 
     /**
