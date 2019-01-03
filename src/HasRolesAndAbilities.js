@@ -179,7 +179,7 @@ class HasRolesAndAbilities {
                         } 
                         else if(ur){
                             ur.foreach((u) => {
-                                roleClaim.findOne({role:u.role,claim:claimName},(err,rc)=>{
+                                roleClaim.findOne({role:u.role,claim:c._id},(err,rc)=>{
                                     if(err){
                                         reject(err)
                                     }
@@ -195,9 +195,20 @@ class HasRolesAndAbilities {
                                             }else{
                                                 resolve(false);
                                             }
-                                        })
+                                        });
                                     }
                                 });
+                            });
+                        }else{
+                            userClaim.findOne({user:u.user,claim:claimName},(err,uc)=>{
+                                if(err){
+                                    reject(err);
+                                }
+                                else if(uc){
+                                    resolve (true);
+                                }else{
+                                    resolve(false);
+                                }
                             });
                         }
                     });
@@ -228,6 +239,54 @@ class HasRolesAndAbilities {
                 }
             });
         });
+    }
+
+    testCannot(claimName){
+        return new Promise((resolve,reject)=>{
+            claim.findOne({name: claimName},(err,c)=>{
+                if(c){
+                    userRole.find({user:this._id},(e,urs)=>{
+                        if(e){
+                            reject(e);
+                        }else if(urs){
+                            urs.foreach((ur)=>{
+                                roleClaim.findOne({role:ur.role,claim:c._id},(err,rc)=>{
+                                    if(err){
+                                        reject(err);
+                                    }
+                                    else if(rc){
+                                        resolve(false);
+                                    } else{
+                                        userClaim.findOne({user:ur.user,claim:c._id},(err,uc)=>{
+                                            if(err){
+                                                reject(err);
+                                            }else if(uc){
+                                                resolve(false);
+                                            }else{
+                                                resolve(true);
+                                            }
+                                        });
+                                    }
+                                })
+                            })
+                        }else{
+                            userClaim.findOne({user:ur.user,claim:c._id},(err,uc)=>{
+                                if(err){
+                                    reject(err);
+                                }else if(uc){
+                                    resolve(false);
+                                }else{
+                                    resolve(true);
+                                }
+                            });
+                        }
+
+                    })
+                } else{
+                    reject("Error, user or claim does not exist");
+                }
+            })
+        })
     }
 
     /**
