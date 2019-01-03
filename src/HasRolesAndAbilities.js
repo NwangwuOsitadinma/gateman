@@ -1,6 +1,7 @@
 var userClaim = require('./Models/UserClaim');
 var userRole =  require('./Models/UserRole');
 var role = require('./Models/Role');
+var roleClaim = require('./Models/RoleClaim');
 var claim = require('./Models/Claim');
 
 class HasRolesAndAbilities {
@@ -17,7 +18,7 @@ class HasRolesAndAbilities {
 
     /**
      * allows a user perform a claim, does nothing if user already has the claim
-     * @param {A string that represents the claim  you want to assign to a user} claim 
+     * @param {A string that represents the claim  you want to assign to a user} claimName 
      */
 
   allow(claimName){
@@ -51,63 +52,98 @@ class HasRolesAndAbilities {
 
     /**
      * disallows a user from performing a particular claim
-     * @param {A string that represents the claim you want to retract from a user} claim 
+     * @param {A string that represents the claim you want to retract from a user} claimName 
      */
-    disallow(Claim){
-        claim.findOne({name: Claim}, (err, claim)=>{
-            if (claim) {
-                userClaim.findOne({user: this._id,claim:claim._id},(err,uc) => {
-                    if(uc){
-                        userClaim.deleteOne({_id:uc._id}, (err)=>{
-                            return {message: 'the claim has been removed from the user'};
-                        });
-                    } else{
-                        return{message: 'invalid action, user claim does not exist'}
-                    }
-                });
-            }
+    disallow(claimName){
+        return new Promise((resolve,reject)=>{
+            claim.findOne({name: claimName}, (err, claim)=>{
+                if(claim){
+                    userClaim.findOne({user:this._id,claim:claim._id}, (e,uc)=>{
+                        if(e){
+                            reject(e)
+                        }else if(uc){
+                            userClaim.delete({user:this._id,claim:uc._id},(err,usrClaim)=>{
+                                if(err) reject(err);
+                                resolve(usrClaim);
+                            })
+                        } else{
+                            reject({
+                                message: "this claim was not assigned to the user"
+                            });
+                        }
+                    });
+                }else{
+                    reject({
+                        message: "The claim does not exist. Consider creating it first"
+                    });
+                }
+            });
         });
     }
 
     /**
      * assigns a role to a user directly
-     * @param {A string that represents the role you want to assign to a user} Role 
+     * @param {A string that represents the role you want to assign to a user} roleName 
      */
-    assign(Role){
-        role.findOne({name: Role}, (err, role)=>{
-            if (role){
-                userRole.findOne({user: this._id,role:role._id},(err,r)=>{
-                    if(r){
-                        return {message: 'this role has already been assigned to the user'};
-                    } else{
-                        userRole.create({user:this._id,role:role._id},function(err,ur){
-                            if(err) throw err;
-                            return ur;
-                        });
-                    }
-                });
-            }
+
+    assign(roleName){
+        return new Promise ((resolve,reject)=>{
+            role.findOne({name: roleName}, (err, role)=>{
+                if(role){
+                    userRole.findOne({user:this._id,role:role._id},(e,rc)=>{
+                        if(e){
+                            reject(e)
+                        }
+                        else if(rc){
+                            reject({
+                                message: "this role was already assigned to the user"
+                            });
+                        } else{
+                            userRole.create({user:this._id,claim:role._id},(err,usrRole) => {
+                                if(err) reject(err);
+                                resolve(usrRole);
+                            });
+                        }
+                        
+                    });
+                } else{
+                    reject({
+                        message: "The role does not exist. Consider creating it first"
+                    });
+                }
+            });
         });
     }
 
     /**
      * retracts a role from a user directly
-     * @param {A string that represents the role you want to retract from the user} Role 
+     * @param {A string that represents the role you want to retract from the user} roleName 
      */
-    retract(Role){
-        role.findOne({name: Role}, (err, role)=>{
-            if (role){
-                userRole.findOne({user: this._id,role:role._id},(err,ur) => {
-                    if(ur){
-                        userRole.deleteOne({_id:ur._id},(err) =>{
-                        if(err) throw err;
-                        return {message: 'the role has been retracted from the user'}
+    retract(roleName){
+        return new Promise((resolve,reject)=>{
+            role.findOne({name: roleName},(err,role)=>{
+                if(role){
+                    userRole.findOne({user:this._id,role:role._id},(e,rc)=>{
+                        if(e){
+                            reject(e)
+                        }else if(rc){
+                            userRole.delete({user:this._id,role:role._id},(err,usrRole)=>{
+                                if(err) reject(err);
+                                resolve(usrRole);
+                            });
+                        }else{
+                            reject({
+                                message: "this role was not assigned to the user"
+                            });
+                        }
                     });
-            } else{
-                    return{message: 'invalid action'}
-            }
-        })
-    }});
+                }else{
+                    reject({
+                        message: "The role does not exist. Consider creating it first"
+                    });
+                }
+            });
+        });
     }
 
     /**
@@ -119,10 +155,61 @@ class HasRolesAndAbilities {
             claim.findOne({name: claimName}, (err,c)=>{
                 if(c){
                     userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
+                        var 
                         if(uc){
                             resolve(true);
                         }else{
                             resolve(false);
+                        }
+                    });
+                } else{
+                    reject("Error, user or claim does not exist");
+                }
+            });
+        });
+    }
+
+    testCan(claimName){
+        return new Promise ((resolve,reject)=>{
+            claim.findOne({name: claimName}, (err,c)=>{
+                if(c){
+                    userRole.find({user:this._id},(e,ur) =>{
+                        if(e){
+                            reject(e)
+                        } 
+                        else if(ur){
+                            ur.foreach((u) => {
+                                roleClaim.findOne({role:u.role,claim:c._id},(err,rc)=>{
+                                    if(err){
+                                        reject(err)
+                                    }
+                                    else if(rc){
+                                        resolve(true);
+                                    }else{
+                                        userClaim.findOne({user:u.user,claim:claimName},(err,uc)=>{
+                                            if(err){
+                                                reject(err);
+                                            }
+                                            else if(uc){
+                                                resolve (true);
+                                            }else{
+                                                resolve(false);
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        }else{
+                            userClaim.findOne({user:u.user,claim:claimName},(err,uc)=>{
+                                if(err){
+                                    reject(err);
+                                }
+                                else if(uc){
+                                    resolve (true);
+                                }else{
+                                    resolve(false);
+                                }
+                            });
                         }
                     });
                 } else{
@@ -152,6 +239,54 @@ class HasRolesAndAbilities {
                 }
             });
         });
+    }
+
+    testCannot(claimName){
+        return new Promise((resolve,reject)=>{
+            claim.findOne({name: claimName},(err,c)=>{
+                if(c){
+                    userRole.find({user:this._id},(e,urs)=>{
+                        if(e){
+                            reject(e);
+                        }else if(urs){
+                            urs.foreach((ur)=>{
+                                roleClaim.findOne({role:ur.role,claim:c._id},(err,rc)=>{
+                                    if(err){
+                                        reject(err);
+                                    }
+                                    else if(rc){
+                                        resolve(false);
+                                    } else{
+                                        userClaim.findOne({user:ur.user,claim:c._id},(err,uc)=>{
+                                            if(err){
+                                                reject(err);
+                                            }else if(uc){
+                                                resolve(false);
+                                            }else{
+                                                resolve(true);
+                                            }
+                                        });
+                                    }
+                                })
+                            })
+                        }else{
+                            userClaim.findOne({user:ur.user,claim:c._id},(err,uc)=>{
+                                if(err){
+                                    reject(err);
+                                }else if(uc){
+                                    resolve(false);
+                                }else{
+                                    resolve(true);
+                                }
+                            });
+                        }
+
+                    })
+                } else{
+                    reject("Error, user or claim does not exist");
+                }
+            })
+        })
     }
 
     /**
@@ -215,12 +350,12 @@ class HasRolesAndAbilities {
        return this.isNotA(roleName);
     }
 
-    getRolesForUser(cb){
-        return userRole.find({},cb)
+    getRolesForUser(userId, cb){
+        return userRole.find({user:userId},cb)
     }
 
-    getClaimsForUser(cb){
-        return userClaim.find({},cb)
+    getClaimsForUser(userId, cb){
+        return userClaim.find({user:userId},cb)
     }
 }
 
