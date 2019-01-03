@@ -208,7 +208,7 @@ User.findOne({name: "chioma"}, (err, user)=>{
 ```
 
 ## Documentation
-* [Usage](http://htmlpreview.github.com/?https://github.com/NwangwuOsitadinma/gateman/blob/chaining/docs/index.html): how Gateman.js works
+* [Usage](http://htmlpreview.github.com/?https://github.com/NwangwuOsitadinma/gateman/blob/chaining/docs/index.html): Gateman methods
 * [Configuring Gateman.js]()
 
 
@@ -228,6 +228,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* GenesysTechHub, Enugu
