@@ -155,7 +155,6 @@ class HasRolesAndAbilities {
             claim.findOne({name: claimName}, (err,c)=>{
                 if(c){
                     userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
-                        var 
                         if(uc){
                             resolve(true);
                         }else{
