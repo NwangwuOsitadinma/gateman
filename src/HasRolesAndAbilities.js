@@ -314,12 +314,42 @@ class HasRolesAndAbilities {
        return this.isNotA(roleName);
     }
 
-    getRolesForUser(userId, cb){
-        return userRole.find({user:userId},cb)
-    }
+    /**
+     * Returns a collection of Roles assigned to a User
+     * @param {A callback function to execute after fetching roles} cb 
+     */
+    getRolesForUser(cb){
+        var result = [];
+        return new Promise ((resolve, reject)=>{
+            userRole.find({user: this._id},(err, roles)=>{
+            if (err){
+                reject(err);
+            } else {
+                for (var item of roles){
+                    item.populate('role', (err, data)=>{
+                        if (err){
+                            reject(err);
+                        } else {
+                            result.push(data.role.name);
+                            if (roles[roles.length-1] == item){
+                                //return only when you've added every role
+                                //Node is non-blocking, so the engine will return an empty array if resolve(code) is place outside the for-loop
+                                resolve(result);
+                            }
+                        }
+                    });
+                }
+            }
+        })
+    })
+}
 
-    getClaimsForUser(userId, cb){
-        return userClaim.find({user:userId},cb)
+    /**
+     * Returns a collection of Claims a User can perform
+     * @param {A callback function to execute after fetching claims} cb 
+     */
+    getClaimsForUser(cb){
+        return userClaim.find({user:this._id}, 'claim',cb).populate('claim');
     }
 }
 
