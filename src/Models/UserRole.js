@@ -7,7 +7,8 @@ module.exports = (mongoose)=>{
         },
         role: {
             type: mongoose.Schema.Types.ObjectId,
-            required: [true,'Sorry, the role is required']
+            required: [true,'Sorry, the role is required'],
+            ref: 'Role'
         }
     });
     if (mn.includes("UserRole")){

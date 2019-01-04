@@ -3,11 +3,13 @@ module.exports = (mongoose)=>{
     var RoleClaimSchema = mongoose.Schema({
         role: {
             type: mongoose.Schema.Types.ObjectId,
-            required: [true,'Sorry, the role is required']
+            required: [true,'Sorry, the role is required'],
+            ref: 'Role'
         },
         claim: {
             type: mongoose.Schema.Types.ObjectId,
-            required: [true,'Sorry! the claim is required']
+            required: [true,'Sorry! the claim is required'],
+            ref: 'Claim'
         }
     });
     if (mn.includes("RoleClaim")){
