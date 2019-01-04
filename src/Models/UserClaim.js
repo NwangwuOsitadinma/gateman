@@ -7,7 +7,8 @@ module.exports = (mongoose)=>{
         },
         claim: {
             type: mongoose.Schema.Types.ObjectId,
-            required: [true,'Sorry, the claim is required']
+            required: [true,'Sorry, the claim is required'],
+            ref: 'Claim'
         }
     });
     if (mn.includes("UserClaim")){

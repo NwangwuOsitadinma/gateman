@@ -1,6 +1,7 @@
 var userClaim = require('./Models/UserClaim');
 var userRole =  require('./Models/UserRole');
 var role = require('./Models/Role');
+var roleClaim = require('./Models/RoleClaim');
 var claim = require('./Models/Claim');
 
 class HasRolesAndAbilities {
@@ -13,6 +14,7 @@ class HasRolesAndAbilities {
         userRole = userRole(mongoose);
         role = role(mongoose);
         claim = claim(mongoose);
+        roleClaim = roleClaim(mongoose);
     }
 
     /**
@@ -98,7 +100,7 @@ class HasRolesAndAbilities {
                                 message: "this role was already assigned to the user"
                             });
                         } else{
-                            userRole.create({user:this._id,claim:role._id},(err,usrRole) => {
+                            userRole.create({user:this._id,role:role._id},(err,usrRole) => {
                                 if(err) reject(err);
                                 resolve(usrRole);
                             });
@@ -153,11 +155,43 @@ class HasRolesAndAbilities {
         return new Promise ((resolve,reject)=>{
             claim.findOne({name: claimName}, (err,c)=>{
                 if(c){
-                    userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
-                        if(uc){
-                            resolve(true);
+                    userRole.find({user:this._id},(e,ur) =>{
+                        if(e){
+                            reject(e)
+                        } 
+                        else if(ur){
+                            ur.forEach((u) => {
+                                roleClaim.findOne({role:u.role,claim:c._id},(err,rc)=>{
+                                    if(err){
+                                        reject(err)
+                                    }
+                                    else if(rc){
+                                        resolve(true);
+                                    }else{
+                                        userClaim.findOne({user:u.user,claim:c._id},(err,uc)=>{
+                                            if(err){
+                                                reject(err);
+                                            }
+                                            else if(uc){
+                                                resolve (true);
+                                            }else{
+                                                resolve(false);
+                                            }
+                                        });
+                                    }
+                                });
+                            });
                         }else{
-                            resolve(false);
+                            userClaim.findOne({user:u.user,claim:claimName},(err,uc)=>{
+                                if(err){
+                                    reject(err);
+                                }
+                                else if(uc){
+                                    resolve (true);
+                                }else{
+                                    resolve(false);
+                                }
+                            });
                         }
                     });
                 } else{
@@ -172,21 +206,51 @@ class HasRolesAndAbilities {
      * @param {a string representing the claim name} claimName
      */
     cannot(claimName){
-        return new Promise ((resolve,reject)=>{
-            claim.findOne({name: claimName}, (err,c)=>{
+        return new Promise((resolve,reject)=>{
+            claim.findOne({name: claimName},(err,c)=>{
                 if(c){
-                    userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
-                        if(uc){
-                            resolve(false);
+                    userRole.find({user:this._id},(e,urs)=>{
+                        if(e){
+                            reject(e);
+                        }else if(urs){
+                            urs.forEach((ur)=>{
+                                roleClaim.findOne({role:ur.role,claim:c._id},(err,rc)=>{
+                                    if(err){
+                                        reject(err);
+                                    }
+                                    else if(rc){
+                                        resolve(false);
+                                    } else{
+                                        userClaim.findOne({user:ur.user,claim:c._id},(err,uc)=>{
+                                            if(err){
+                                                reject(err);
+                                            }else if(uc){
+                                                resolve(false);
+                                            }else{
+                                                resolve(true);
+                                            }
+                                        });
+                                    }
+                                })
+                            })
                         }else{
-                            resolve(true);
+                            userClaim.findOne({user:ur.user,claim:c._id},(err,uc)=>{
+                                if(err){
+                                    reject(err);
+                                }else if(uc){
+                                    resolve(false);
+                                }else{
+                                    resolve(true);
+                                }
+                            });
                         }
-                    });
+
+                    })
                 } else{
                     reject("Error, user or claim does not exist");
                 }
-            });
-        });
+            })
+        })
     }
 
     /**
@@ -250,12 +314,87 @@ class HasRolesAndAbilities {
        return this.isNotA(roleName);
     }
 
-    getRolesForUser(cb){
-        return userRole.find({},cb)
-    }
+    /**
+     * Returns a collection of Roles assigned to a User
+     */
+    getRolesForUser(){
+        var result = [];
+        return new Promise ((resolve, reject)=>{
+            userRole.find({user: this._id},(err, roles)=>{
+            if (err){
+                reject(err);
+            } else {
+                for (var item of roles){
+                    item.populate('role', (err, data)=>{
+                        if (err){
+                            reject(err);
+                        } else {
+                            result.push(data.role.name);
+                            if (roles[roles.length-1] == item){
+                                //return only when you've added every role
+                                //Node is non-blocking, so the engine will return an empty array if resolve(code) is place outside the for-loop
+                                resolve(result);
+                            }
+                        }
+                    });
+                }
+            }
+        })
+    })
+}
 
+    /**
+     * Returns a collection of Claims a User can perform
+     * @param {A callback function to execute after fetching claims} cb 
+     */
     getClaimsForUser(cb){
-        return userClaim.find({},cb)
+        var result = [];
+        return new Promise ((resolve,reject)=>{
+            userRole.find({user:this._id},(err,userRoles)=>{
+                if(err){
+                    reject(err);
+                } else{
+                    for(var userRole of userRoles){
+                        roleClaim.find({role:userRole.role},(err,roleClaims)=>{
+                            if(err){
+                                reject(err);
+                            }else{
+                                for(var item of roleClaims){
+                                    item.populate('claim',(err,roleClm)=>{
+                                        if(err){
+                                            reject(err)
+                                        } else{
+                                            result.push(roleClm.claim.name);
+                                            if(roleClaims[roleClaims.length-1] == item){
+                                                userClaim.find({user:this._id},(err,userClaims)=>{
+                                                    if(err){
+                                                        reject(err);
+                                                    }else{
+                                                        for(var item of userClaims){
+                                                            item.populate('claim',(err,data)=>{
+                                                                if(err){
+                                                                    reject(err);
+                                                                } else{
+                                                                    result.push(data.claim.name);
+                                                                    if(userClaims[userClaims.length-1] == item){
+                                                                        resolve(result)
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
     }
 }
 
