@@ -14,6 +14,7 @@ class HasRolesAndAbilities {
         userRole = userRole(mongoose);
         role = role(mongoose);
         claim = claim(mongoose);
+        roleClaim = roleClaim(mongoose);
     }
 
     /**
@@ -99,7 +100,7 @@ class HasRolesAndAbilities {
                                 message: "this role was already assigned to the user"
                             });
                         } else{
-                            userRole.create({user:this._id,claim:role._id},(err,usrRole) => {
+                            userRole.create({user:this._id,role:role._id},(err,usrRole) => {
                                 if(err) reject(err);
                                 resolve(usrRole);
                             });
@@ -154,30 +155,12 @@ class HasRolesAndAbilities {
         return new Promise ((resolve,reject)=>{
             claim.findOne({name: claimName}, (err,c)=>{
                 if(c){
-                    userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
-                        if(uc){
-                            resolve(true);
-                        }else{
-                            resolve(false);
-                        }
-                    });
-                } else{
-                    reject("Error, user or claim does not exist");
-                }
-            });
-        });
-    }
-
-    testCan(claimName){
-        return new Promise ((resolve,reject)=>{
-            claim.findOne({name: claimName}, (err,c)=>{
-                if(c){
                     userRole.find({user:this._id},(e,ur) =>{
                         if(e){
                             reject(e)
                         } 
                         else if(ur){
-                            ur.foreach((u) => {
+                            ur.forEach((u) => {
                                 roleClaim.findOne({role:u.role,claim:c._id},(err,rc)=>{
                                     if(err){
                                         reject(err)
@@ -185,7 +168,7 @@ class HasRolesAndAbilities {
                                     else if(rc){
                                         resolve(true);
                                     }else{
-                                        userClaim.findOne({user:u.user,claim:claimName},(err,uc)=>{
+                                        userClaim.findOne({user:u.user,claim:c._id},(err,uc)=>{
                                             if(err){
                                                 reject(err);
                                             }
@@ -223,24 +206,6 @@ class HasRolesAndAbilities {
      * @param {a string representing the claim name} claimName
      */
     cannot(claimName){
-        return new Promise ((resolve,reject)=>{
-            claim.findOne({name: claimName}, (err,c)=>{
-                if(c){
-                    userClaim.findOne({user:this._id,claim:c._id},(err,uc)=>{
-                        if(uc){
-                            resolve(false);
-                        }else{
-                            resolve(true);
-                        }
-                    });
-                } else{
-                    reject("Error, user or claim does not exist");
-                }
-            });
-        });
-    }
-
-    testCannot(claimName){
         return new Promise((resolve,reject)=>{
             claim.findOne({name: claimName},(err,c)=>{
                 if(c){
@@ -248,7 +213,7 @@ class HasRolesAndAbilities {
                         if(e){
                             reject(e);
                         }else if(urs){
-                            urs.foreach((ur)=>{
+                            urs.forEach((ur)=>{
                                 roleClaim.findOne({role:ur.role,claim:c._id},(err,rc)=>{
                                     if(err){
                                         reject(err);
