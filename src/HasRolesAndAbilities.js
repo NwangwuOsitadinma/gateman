@@ -316,9 +316,8 @@ class HasRolesAndAbilities {
 
     /**
      * Returns a collection of Roles assigned to a User
-     * @param {A callback function to execute after fetching roles} cb 
      */
-    getRolesForUser(cb){
+    getRolesForUser(){
         var result = [];
         return new Promise ((resolve, reject)=>{
             userRole.find({user: this._id},(err, roles)=>{
@@ -349,7 +348,53 @@ class HasRolesAndAbilities {
      * @param {A callback function to execute after fetching claims} cb 
      */
     getClaimsForUser(cb){
-        return userClaim.find({user:this._id}, 'claim',cb).populate('claim');
+        var result = [];
+        return new Promise ((resolve,reject)=>{
+            userRole.find({user:this._id},(err,userRoles)=>{
+                if(err){
+                    reject(err);
+                } else{
+                    for(var userRole of userRoles){
+                        roleClaim.find({role:userRole.role},(err,roleClaims)=>{
+                            if(err){
+                                reject(err);
+                            }else{
+                                for(var item of roleClaims){
+                                    item.populate('claim',(err,roleClm)=>{
+                                        if(err){
+                                            reject(err)
+                                        } else{
+                                            result.push(roleClm.claim.name);
+                                            if(roleClaims[roleClaims.length-1] == item){
+                                                userClaim.find({user:this._id},(err,userClaims)=>{
+                                                    if(err){
+                                                        reject(err);
+                                                    }else{
+                                                        for(var item of userClaims){
+                                                            item.populate('claim',(err,data)=>{
+                                                                if(err){
+                                                                    reject(err);
+                                                                } else{
+                                                                    result.push(data.claim.name);
+                                                                    if(userClaims[userClaims.length-1] == item){
+                                                                        resolve(result)
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
     }
 }
 
