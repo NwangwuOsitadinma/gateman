@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/GateManTest');
 
 var GateMan = require('../GateMan');
-var rolesAndAbilities = require('../HasRolesAndAbilities');
+var rolesAndAbilities = require('../HasRolesAndClaims');
 var express = require('express');
 var role = require('../Models/Role');
 var app = express();

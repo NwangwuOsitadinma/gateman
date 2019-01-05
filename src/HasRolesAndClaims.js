@@ -4,7 +4,7 @@ var role = require('./Models/Role');
 var roleClaim = require('./Models/RoleClaim');
 var claim = require('./Models/Claim');
 
-class HasRolesAndAbilities {
+class HasRolesAndClaims {
     /**
      * Provide a valid mongoose connection object that will be used to store application credentials
      * @param {A mongoose connection object} mongoose 
@@ -447,4 +447,4 @@ class HasRolesAndAbilities {
     }
 }
 
-module.exports = HasRolesAndAbilities;
+module.exports = HasRolesAndClaims;

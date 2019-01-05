@@ -1,5 +1,5 @@
 var GateMan = require('./src/GateMan');
-var rolesAndAbilities = require('./src/HasRolesAndAbilities');
+var rolesAndClaims = require('./src/HasRolesAndClaims');
 
 /**
  * Creates a new Gateman instance
@@ -11,7 +11,7 @@ exports.GateMan = (dbConnection)=>{
 /**
  * Initializes roles and abilities, to be extended by a valid User model
  */
-exports.hasRolesAndAbilities = (dbConnection)=>{
-    new rolesAndAbilities(dbConnection);
-    return rolesAndAbilities;
+exports.hasRolesAndClaims = (dbConnection)=>{
+    new rolesAndClaims(dbConnection);
+    return rolesAndClaims;
 }

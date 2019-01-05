@@ -2,7 +2,7 @@
 
 # Gateman.js
 
-Gatemanjs is an authorization system designed to manage roles and abilities in node applications that use mongodb for data storage. It works together with mongoose to provide a fluent approach to managing roles and abilities.
+Gatemanjs is an authorization system designed to manage roles and claims in node applications that use mongodb for data storage. It works together with mongoose to provide a fluent approach to managing roles and claims.
 
 ## Installation
 
@@ -14,14 +14,14 @@ npm install gateman
 
 ## Usage
 
-Before using gateman in your node application, you'll have to import the Gateman package and setup the Gateman Class by passing in a valid mongoose connection object
+Before using gateman in your node application, you'll have to import the gateman package and setup the gateman class by passing in a valid mongoose connection object
 
 ```
 var mongoose = require('mongoose');
 var gateman = require("gateman").GateMan(mongoose);
 ```
 
-### Creating roles & abilities
+### Creating roles & claims
 You have to create a role before using it in your application, Gateman provides an easy way of doing that.
 
 ```
@@ -33,7 +33,7 @@ gateman.createRole("admin", (err, role)=>{
         console.log(role);
     });
 ```
-Creating abilities is similar to creating roles
+Creating claims is similar to creating roles
 
 ```
 //Syntax
@@ -56,11 +56,11 @@ gateman.getRoles((err, data)=>{
 });
 ```
 
-### Allowing members of a role to perform a claim/ability
-Adding abilities to roles is made extremely easy. You do not have to create an ability in advance. Simply pass the name of the ability, and Gateman will create it if it doesn't exist.
+### Allowing members of a role to perform a claim/claim
+Adding claims to roles is made extremely easy. You do not have to create a claim in advance. Simply pass the name of the claim, and Gateman will create it if it doesn't exist.
 
 ```
-gateman.allow('role').to('ability'); //for an existing role
+gateman.allow('role').to('claim'); //for an existing role
 ```
 You can also assign a claim to a role immediately after creating it
 
@@ -69,38 +69,38 @@ gateman.createRole("admin", (err, role)=>{
         gateman.allow("admin").to("delete");
     });
 
-//this provides every member of the admin role the ability to delete
+//this provides every member of the admin role the claim to delete
 ```
 
-### Disallowing members of a role from performing a claim/ability
+### Disallowing members of a role from performing a claim/claim
 Retracting claims from a role is very easy, you just need the rolename and claimname
 
 ```
-gateman.disallow('role').from('ability');
+gateman.disallow('role').from('claim');
 
-//Gateman does nothing if the role doesn't possess the ability
+//Gateman does nothing if the role doesn't possess the claim
 ```
 
 ### Using gateman with user models
 
-It is important to set up your User model to extend the HasRolesAndAbilities class from the gateman package.
+It is important to set up your User model to extend the HasRolesAndClaims class from the gateman package.
 
 ```
 const mogoose = require('mongoose');
-const hasRolesAndAbilities = require('gateman').hasRolesAndAbilities(mogoose);
+const hasRolesAndclaims = require('gateman').hasRolesAndClaims(mogoose);
 
 var UserSchema =  mongoose.Schema({
     name: String,
     email: String
 });
 
-UserSchema.loadClass(hasRolesAndAbilities);
+UserSchema.loadClass(hasRolesAndClaims);
 module.exports = mongoose.model('User',UserSchema)
 ```
 
 After setting up your user model, you can call gateman methods on your mongoose user model.
 
-### Allowing users to perform a claim/ability
+### Allowing users to perform a claim/claim
 ```
 //Example
 
@@ -114,7 +114,7 @@ After setting up your user model, you can call gateman methods on your mongoose 
     });
 
 /*
-The Gateman hasRolesAndAbilities class is loaded into a valid mongoose model which means that the methods are only accessible to valid User objects.
+The Gateman hasRolesAndClaims class is loaded into a valid mongoose model which means that the methods are only accessible to valid user objects.
 */
 
 //Disallowing a user from performing a claim
@@ -144,7 +144,7 @@ Before assigning a role to a user, make sure it has been created.
     });
 
 /*
-The Gateman hasRolesAndAbilities class is loaded into a valid mongoose model which means that the methods are only accessible to valid user objects.
+The Gateman hasRolesAndClaims class is loaded into a valid mongoose model which means that the methods are only accessible to valid user objects.
 */
 
 //Retracting a role from a user
@@ -159,25 +159,25 @@ The Gateman hasRolesAndAbilities class is loaded into a valid mongoose model whi
     });
 ```
 
-### Checking for User Abilities and Roles
+### Checking for User claims and Roles
 Gateman provides an easy way of verifying if a user belongs to a role or can perform a claim
 
 ```
 //To verify if a User belongs to a Role
 
 User.findOne({name: "chioma"}, (err, user)=>{
-        user.isA("role").then((isRole)=>{
-            if (isRole==true){
+        user.isA("role").then((userHasRole)=>{
+            if (userHasRole){
                 //user belongs to role
             }
         });
     });
 
-//To verify if a User can perform an Ability
+//To verify if a User can perform an claim
 
 User.findOne({name: "chioma"}, (err, user)=>{
-        user.can("claim").then((result)=>{
-            if (result==true){
+        user.can("claim").then((hasClaim)=>{
+            if (userHasClaim){
                 //user can perform claim
             }
         });
