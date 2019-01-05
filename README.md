@@ -209,7 +209,6 @@ User.findOne({name: "chioma"}, (err, user)=>{
 
 ## Documentation
 * [Usage](http://htmlpreview.github.com/?https://github.com/NwangwuOsitadinma/gateman/blob/chaining/docs/index.html): Gateman methods
-* [Configuring Gateman.js]()
 
 
 ## Contributing
