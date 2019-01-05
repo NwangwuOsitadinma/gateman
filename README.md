@@ -1,4 +1,4 @@
-<img src="/docs/assets/gateman.jpeg" width="100%" height="500"/>
+<img src="https://raw.githubusercontent.com/NwangwuOsitadinma/gateman/master/docs/assets/gateman.jpeg" width="100%"/>
 
 # Gateman.js
 
@@ -183,6 +183,9 @@ User.findOne({name: "chioma"}, (err, user)=>{
         });
     });
 ```
+
+## Documentation
+* [Usage](http://htmlpreview.github.com/?https://github.com/NwangwuOsitadinma/gateman/blob/chaining/docs/index.html):   Gateman methods
 
 
 ## Contributing
