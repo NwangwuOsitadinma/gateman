@@ -53,22 +53,22 @@ class GateMan {
 
     /**
      * pass in the claim to be assigned to a role
-     * @param {pass a claim as a string if you called allow} claimOrUser 
+     * @param {pass a claim as a string if you called allow} claimName 
      */
-    to (claimOrUser){
+    to (claimName){
         if (this.operation == 'allow'){
             //find the role, allow was meant to do this
             role.findOne({name: this.role}, (err, dbRole)=>{
                 if (dbRole){
                     //assign role here
-                    claim.where('name',claimOrUser).limit(1).exec((err, c)=>{
+                    claim.where('name',claimName).limit(1).exec((err, c)=>{
                         if(c.length > 0){
                             roleClaim.create({role:dbRole._id,claim:c[0]._id},function(err,roleClaim){
                                 if(err) throw err;
                                 return roleClaim;
                             });
                         }else{
-                            claim.create({name:claimOrUser},(err,claimE) => { 
+                            claim.create({name:claimName},(err,claimE) => { 
                                 if(err) throw err;
                                 roleClaim.create({role:dbRole._id,claim:claimE._id},function(err,roleClaim){
                                     if(err) throw err;
@@ -86,13 +86,13 @@ class GateMan {
 
     /**
      * pass in the claim
-     * @param {the claim to retract from a role} Claim
+     * @param {the claim to retract from a role} claimName
      */
-    from(Claim){
+    from(claimName){
         if (this.operation == 'dissallow'){
             role.findOne({name: this.role}, (err, role)=>{
                 if (role){
-                    claim.findOne({name: Claim}, (err, claim)=>{
+                    claim.findOne({name: claimName}, (err, claim)=>{
                         roleClaim.findOneAndDelete({role: role, claim: claim}, (err)=>{
                             return;
                         });
