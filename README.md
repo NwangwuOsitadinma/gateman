@@ -2,7 +2,7 @@
 
 # Gateman.js
 
-Gatemanjs is an authorization system designed to manage roles and abilities in a node application that uses mongodb for data storage. It works together with mongoose to provide a fluent approach to managing roles and abilities.
+Gatemanjs is an authorization system designed to manage roles and abilities in node applications that use mongodb for data storage. It works together with mongoose to provide a fluent approach to managing roles and abilities.
 
 ## Installation
 
