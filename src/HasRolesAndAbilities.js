@@ -323,7 +323,10 @@ class HasRolesAndAbilities {
             userRole.find({user: this._id},(err, roles)=>{
             if (err){
                 reject(err);
-            } else {
+            } else if (roles.length < 1){
+                resolve(result);
+            }
+            else {
                 for (var item of roles){
                     item.populate('role', (err, data)=>{
                         if (err){
@@ -353,12 +356,12 @@ class HasRolesAndAbilities {
             userRole.find({user:this._id},(err,userRoles)=>{
                 if(err){
                     reject(err);
-                } else{
+                } else if (userRoles.length>=1){
                     for(var userRole of userRoles){
                         roleClaim.find({role:userRole.role},(err,roleClaims)=>{
                             if(err){
                                 reject(err);
-                            }else{
+                            }else if(roleClaims.length >= 1){
                                 for(var item of roleClaims){
                                     item.populate('claim',(err,roleClm)=>{
                                         if(err){
@@ -369,7 +372,7 @@ class HasRolesAndAbilities {
                                                 userClaim.find({user:this._id},(err,userClaims)=>{
                                                     if(err){
                                                         reject(err);
-                                                    }else{
+                                                    }else if (userClaims.length >= 1){
                                                         for(var item of userClaims){
                                                             item.populate('claim',(err,data)=>{
                                                                 if(err){
@@ -377,24 +380,70 @@ class HasRolesAndAbilities {
                                                                 } else{
                                                                     result.push(data.claim.name);
                                                                     if(userClaims[userClaims.length-1] == item){
-                                                                        resolve(result)
+                                                                        resolve(result.filter(this.onlyUnique));
                                                                     }
                                                                 }
                                                             });
                                                         }
+                                                    } else {
+                                                        resolve(result.filter(this.onlyUnique));
                                                     }
                                                 });
                                             }
                                         }
                                     });
                                 }
+                            } else {
+                                userClaim.find({user:this._id},(err,userClaims)=>{
+                                    if(err){
+                                        reject(err);
+                                    }else if (userClaims.length >= 1){
+                                        for(var item of userClaims){
+                                            item.populate('claim',(err,data)=>{
+                                                if(err){
+                                                    reject(err);
+                                                } else{
+                                                    result.push(data.claim.name);
+                                                    if(userClaims[userClaims.length-1] == item){
+                                                        resolve(result.filter(this.onlyUnique));
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
                             }
                         });
                     }
+                } else {
+                    userClaim.find({user:this._id},(err,userClaims)=>{
+                        if(err){
+                            reject(err);
+                        }else if (userClaims.length >= 1){
+                            for(var item of userClaims){
+                                item.populate('claim',(err,data)=>{
+                                    if(err){
+                                        reject(err);
+                                    } else{
+                                        result.push(data.claim.name);
+                                        if(userClaims[userClaims.length-1] == item){
+                                            resolve(result.filter(this.onlyUnique));
+                                        }
+                                    }
+                                });
+                            }
+                        } else {
+                            resolve(result.filter(this.onlyUnique));
+                        }
+                    });
                 }
             });
         });
 
+    }
+
+    onlyUnique(value, index, self) { 
+        return self.indexOf(value) === index;
     }
 }
 
