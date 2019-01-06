@@ -21,12 +21,10 @@ describe('Gateman', function(){
     });
 
     describe('createClaim', function(){
-        it ('should return a claim object if created successfully',(done)=>{
-            
+        it ('should return a claim object if created successfully',(done)=>{            
             var c = 'turn-water-into-wine';   
             GateMan.createClaim(c)
             .then((claim)=>{
-                console.log(claim)
                 should.equal(claim.name,c);
                 done();
             });
