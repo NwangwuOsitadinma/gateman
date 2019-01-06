@@ -60,7 +60,21 @@ describe('Gateman', function(){
                 done();
             });
         }).timeout(10000);
-    })
+    });
+
+    describe('getClaims',function(){
+        it('should return a collection of claims with at least one member',(done)=>{
+            var c = 'turn-water-into-wine';
+            GateMan.createClaim(c)
+            .then((claim)=>{
+                return GateMan.getClaims();
+            })
+            .then((claims)=>{
+                claims.should.not.be.empty
+                done()
+            });
+        }).timeout(10000);
+    });
 
 
     
