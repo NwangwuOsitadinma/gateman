@@ -43,7 +43,6 @@ describe('Gateman', function(){
                 return GateMan.getClaim(claim.name)
             })
             .then((claim)=>{
-                console.log(claim);
                 should.equal(claim,null);
                 done();
             });
