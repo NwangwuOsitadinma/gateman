@@ -15,15 +15,18 @@ class GateMan {
     }
 
      /**
+      * creates a new gateman role 
      * @param {A string that represents the name of the claim you want to create} roleName
+     * @returns Promise
      */
     createRole(roleName,){
         return role.create({name: roleName});
     }
 
     /**
-     * Deletes a role from the system
+     * deletes a gateman role
      * @param {A string that represents the name of the role to be deleted} roleName 
+     * @returns Promise
      */
     removeRole(roleName){
         return role.findOneAndDelete({name: roleName});
@@ -101,16 +104,16 @@ class GateMan {
 
     /**
      * Returns roles existing in the system
-     * @param {Callback function} cb 
+     * @returns {Promise}
      */
-    getRoles(cb){
-        role.find({}, cb);
+    getRoles(){
+        return role.find({});
     }
 
     /**
      * Creates a new claim
      * @param {A string that represents the name of the claim} claimName 
-     * @param {A callback function that runs after the claim has been created} cb 
+     * @returns Promise 
      */
     createClaim(claimName){
         return claim.create({
@@ -120,8 +123,9 @@ class GateMan {
 
 
     /**
-     * Deletes a claim from the system
+     * Deletes a gateman claim 
      * @param {A string that represents the name of the claim to be deleted} claimName 
+     * @returns Promise
      */
     removeClaim(claimName){
         return claim.findOneAndDelete({name: claimName});
@@ -129,15 +133,16 @@ class GateMan {
 
     /**
      * Returns all claims existing in the system
-     * @param {A callback function that runs after claims have been found} cb 
+     * @returns Promise
      */
     getClaims(){
         return claim.find({});
     }
 
     /**
-     * Returns one claim that matches the claimName passed in
+     * Returns one claim that matches the claimName given
      * @param {String - The claimName you want to find} claimName 
+     * @returns Promise
      */
     getClaim(claimName){
         return claim.findOne({name:claimName});
