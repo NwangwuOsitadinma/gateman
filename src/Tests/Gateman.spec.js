@@ -82,12 +82,39 @@ describe('Gateman Roles',function(){
     beforeEach('ensuring db is fresh',(done)=>{
         console.log('before roles');
         mongoose.connect('mongodb://localhost:27017/GateManTest',{useNewUrlParser: true});
-        GateMan.removeRole('turn-water-into-wine').then((d)=>{});
+        GateMan.removeRole('admin').then((d)=>{});
         done()
     });
     afterEach('ensuring everything is cleaned up',function(done){
         console.log('after');
         mongoose.disconnect();
         done();
+    });
+    describe('createRole', function(){
+        it ('should return a role object if created successfully',(done)=>{            
+            var r = 'admin';   
+            GateMan.createRole(r)
+            .then((role)=>{
+                should.equal(role.name,r);
+                done();
+            });
+        }).timeout(10000);
+    });
+    describe('removeRole',function(){
+        it('should not return anything if it actually deleted',(done)=>{
+            var r = 'admin'; 
+            GateMan.createRole(r)
+            .then((role)=>{
+                return GateMan.removeRole(role.name)
+            })
+            .then((role)=>{
+                return GateMan.getRole(role.name)
+            })
+            .then((role)=>{
+                should.equal(role,null);
+                done();
+            });
+
+        }).timeout(10000);
     });
 })
