@@ -16,10 +16,9 @@ class GateMan {
 
      /**
      * @param {A string that represents the name of the claim you want to create} roleName
-     * @param {A callback function that runs after the claim has been created} cb
      */
-    createRole(roleName,cb){
-        role.create({name: roleName},cb);
+    createRole(roleName,){
+        return role.create({name: roleName});
     }
 
     /**
