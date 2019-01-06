@@ -31,6 +31,14 @@ class GateMan {
     removeRole(roleName){
         return role.findOneAndDelete({name: roleName});
     }
+    /**
+     * returns one gateman role specified by the name given
+     * @param {A string that represents the name of the role to be returned} roleName 
+     * @returns Promise
+     */
+    getRole(roleName){
+        return role.findOne({name:roleName});
+    }
     
     /**
      * Allows members of a role to perform a claim
