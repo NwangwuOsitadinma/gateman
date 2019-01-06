@@ -115,8 +115,10 @@ class GateMan {
      * @param {A string that represents the name of the claim} claimName 
      * @param {A callback function that runs after the claim has been created} cb 
      */
-    createClaim(claimName, cb){
-        claim.create({name: claimName}, cb);
+    createClaim(claimName){
+        return claim.create({
+            name: claimName
+        });
     }
 
 
@@ -125,17 +127,23 @@ class GateMan {
      * @param {A string that represents the name of the claim to be deleted} claimName 
      */
     removeClaim(claimName){
-        claim.findOneAndDelete({name: claimName}, (err)=>{
-            return;
-        });
+        return claim.findOneAndDelete({name: claimName});
     }
 
     /**
      * Returns all claims existing in the system
      * @param {A callback function that runs after claims have been found} cb 
      */
-    getClaims(cb){
-        claim.find({}, cb);
+    getClaims(){
+        return claim.find({});
+    }
+
+    /**
+     * Returns one claim that matches the claimName passed in
+     * @param {String - The claimName you want to find} claimName 
+     */
+    getClaim(claimName){
+        return claim.findOne({name:claimName});
     }
 
 
