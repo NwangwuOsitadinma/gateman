@@ -32,6 +32,25 @@ describe('Gateman', function(){
             });
         }).timeout(10000);
     });
+    describe('removeClaim',function(){
+        it('should not return anything if it actually deleted',(done)=>{
+            var c = 'turn-water-into-wine';
+            GateMan.createClaim(c)
+            .then((claim)=>{
+                return GateMan.removeClaim(claim.name)
+            })
+            .then((claim)=>{
+                return GateMan.getClaim(claim.name)
+            })
+            .then((claim)=>{
+                console.log(claim);
+                should.equal(claim,null);
+                done();
+            });
+
+        }).timeout(10000);
+    });
+
 
 
 
