@@ -26,9 +26,7 @@ class GateMan {
      * @param {A string that represents the name of the role to be deleted} roleName 
      */
     removeRole(roleName){
-        role.findOneAndDelete({name: roleName}, (err)=>{
-            return;
-        });
+        return role.findOneAndDelete({name: roleName});
     }
     
     /**
