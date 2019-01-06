@@ -51,7 +51,19 @@ describe('Gateman', function(){
         }).timeout(10000);
     });
 
-
+    describe('getClaim',function(){
+        it('should return one valid claim',(done)=>{
+            var c = 'turn-water-into-wine';
+            GateMan.createClaim(c)
+            .then((claim)=>{
+                return GateMan.getClaim(claim.name);
+            })
+            .then((claim)=>{
+                should.equal(claim.name,c);
+                done();
+            });
+        }).timeout(10000);
+    })
 
 
     
