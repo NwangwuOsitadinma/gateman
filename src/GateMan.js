@@ -39,6 +39,10 @@ class GateMan {
     getRole(roleName){
         return role.findOne({name:roleName});
     }
+
+    role(roleName){
+        return this.getRole(roleName);
+    }
     
     /**
      * Allows members of a role to perform a claim
