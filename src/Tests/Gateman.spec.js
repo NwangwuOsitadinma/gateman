@@ -11,7 +11,9 @@ describe('Gateman Claims', function(){
     beforeEach('ensuring the db is fresh',function(done){
         console.log('before');
         mongoose.connect('mongodb://localhost:27017/GateManTest',{useNewUrlParser: true});
-        GateMan.removeClaim('turn-water-into-wine').then((d)=>{});
+        GateMan.removeClaim('turn-water-into-wine')
+        .then((d)=>{})
+        .catch((err)=>{console.log(err)});
         done()
     });
     afterEach('ensuring everything is cleaned up',function(done){
@@ -117,4 +119,35 @@ describe('Gateman Roles',function(){
 
         }).timeout(10000);
     });
+
+    describe('getRole',function(){
+        it('should return one valid role',(done)=>{
+            var r = "admin";
+            GateMan.createRole(r)
+            .then((role)=>{
+                return GateMan.getRole(r);
+            })
+            .then((role)=>{
+                should.not.equal(role.name,r);
+                done()
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        }).timeout(10000);
+    });
+
+    describe('getRoles',function(){
+        it('should return a collection of at least one valid role',(done)=>{
+            var r = "admin";
+            GateMan.createRole(r)
+            .then((role)=>{
+                return GateMan.getRoles();
+            })
+            .then((roles)=>{
+                roles.should.not.be.empty;
+                done();
+            });
+        }).timeout(10000)
+    })
 })
