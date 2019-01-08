@@ -72,9 +72,19 @@ class GateMan {
                     //assign role here
                     claim.where('name',claimName).limit(1).exec((err, c)=>{
                         if(c.length > 0){
-                            roleClaim.create({role:dbRole._id,claim:c[0]._id},function(err,roleClaim){
-                                if(err) reject(err);
-                                resolve(true);//we should return a boolean instaed of the roleClaim(I don't thing it's needed for anything)
+                            roleClaim.findOne({role:dbRole._id, claim:c[0]._id}, (err, rlclm)=>{
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    if (rlclm){
+                                        reject("Claim has already been assigned to Role");
+                                    } else {
+                                        roleClaim.create({role:dbRole._id,claim:c[0]._id},function(err,roleClaim){
+                                            if(err) reject(err);
+                                            resolve(true);//we should return a boolean instaed of the roleClaim(I don't thing it's needed for anything)
+                                        });
+                                    }
+                                }
                             });
                         }else{
                             claim.create({name:claimName},(err,claimE) => { 
