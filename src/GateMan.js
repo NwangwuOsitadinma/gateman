@@ -64,6 +64,7 @@ class GateMan {
      * @param {pass a claim as a string if you called allow} claimName 
      */
     to (claimName){
+        return new Promise((resolve,reject)=>{
         if (this.operation == 'allow'){
             //find the role, allow was meant to do this
             role.findOne({name: this.role}, (err, dbRole)=>{
@@ -72,24 +73,25 @@ class GateMan {
                     claim.where('name',claimName).limit(1).exec((err, c)=>{
                         if(c.length > 0){
                             roleClaim.create({role:dbRole._id,claim:c[0]._id},function(err,roleClaim){
-                                if(err) throw err;
-                                return roleClaim;
+                                if(err) reject(err);
+                                resolve(true);//we should return a boolean instaed of the roleClaim(I don't thing it's needed for anything)
                             });
                         }else{
                             claim.create({name:claimName},(err,claimE) => { 
-                                if(err) throw err;
+                                if(err) reject(err);
                                 roleClaim.create({role:dbRole._id,claim:claimE._id},function(err,roleClaim){
                                     if(err) throw err;
-                                    return roleClaim;
+                                    resolve(true);
                                 });
                             });
                         }
-                    }); 
+                    });
                 }else{
-                    return "role not found";
+                    reject("role not found");
                 }
             });
         }
+    });
     }
 
     /**
@@ -97,17 +99,26 @@ class GateMan {
      * @param {the claim to retract from a role} claimName
      */
     from(claimName){
-        if (this.operation == 'dissallow'){
+       return new Promise((resolve, reject)=>{
+           if (this.operation == 'dissallow'){
             role.findOne({name: this.role}, (err, role)=>{
                 if (role){
                     claim.findOne({name: claimName}, (err, claim)=>{
-                        roleClaim.findOneAndDelete({role: role, claim: claim}, (err)=>{
-                            return;
+                        if (err) {
+                            reject(err);
+                        } else {
+                            roleClaim.findOneAndDelete({role: role, claim: claim}, (err)=>{
+                            if (err) {
+                                reject (err);
+                            } else {
+                                resolve("claim has been retracted from role");
+                            }
                         });
+                    }
                     });
                 }
             });
-        }
+        }});
     }
 
     /**
@@ -168,6 +179,15 @@ class GateMan {
                 roleClaim.find({role: role._id}, cb);
             }
         });
+    }
+
+
+    role(roleName){
+
+    }
+
+    can(claimName){
+        
     }
 }
 
