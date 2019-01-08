@@ -55,8 +55,10 @@ gateman.createClaim("delete").then((claim)=>{
 gateman.getRoles(callback);
 
 //Example
-gateman.getRoles((err, data)=>{
-    console.log(data);
+gateman.getRoles().then(roles=>{
+    //roles is a collection of existing roles
+}).catch(err=>{
+    //err contains the error message, if any
 });
 ```
 
@@ -69,9 +71,13 @@ gateman.allow('role').to('claim'); //for an existing role
 You can also assign a claim to a role immediately after creating it
 
 ```
-gateman.createRole("admin", (err, role)=>{
-        gateman.allow("admin").to("delete");
+gateman.createRole("admin").then(role=>{
+    gateman.allow("admin").to("delete").then(result=>{
+        //result is true if claim was assigned successfully
+    }).catch(err=>{
+        //err contains the error message, if any
     });
+})
 
 //this provides every member of the admin role the claim to delete
 ```
@@ -80,9 +86,30 @@ gateman.createRole("admin", (err, role)=>{
 Retracting claims from a role is very easy, you just need the rolename and claimname
 
 ```
-gateman.disallow('role').from('claim');
+gateman.disallow('role').from('claim').then(result=>{
+    //result is true if claim was retracted
+}).catch(err=>{
+    //err contains any error message, if any
+});
 
 //Gateman does nothing if the role doesn't possess the claim
+```
+
+### Checking for Role claims
+Checking if a Claim has been assigned to a Role can be done this way
+
+```
+gateman.role('rolename').can('claimname').then(result=>{
+    //result is true if the claim has been assigned, else it will be false
+});
+
+//Checking for errors
+
+gateman.role('rolename').can('claimname').then(result=>{
+    //you can user result here
+}).catch(err=>{
+    //err contains error message if any
+});
 ```
 
 ### Using gateman with user models
@@ -91,7 +118,7 @@ It is important to set up your User model to extend the HasRolesAndClaims class 
 
 ```
 const mogoose = require('mongoose');
-const hasRolesAndclaims = require('gateman').hasRolesAndClaims(mogoose);
+const hasRolesAndClaims = require('gateman').hasRolesAndClaims(mogoose);
 
 var UserSchema =  mongoose.Schema({
     name: String,
