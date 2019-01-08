@@ -26,22 +26,26 @@ You have to create a role before using it in your application, Gateman provides 
 
 ```
 //Syntax
-gateman.createRole(roleName, callback);
+gateman.createRole(roleName);
 
 //Example
-gateman.createRole("admin", (err, role)=>{
+gateman.createRole("admin").then((role)=>{
         console.log(role);
+    }).catch((err)=>{
+        console.log(err);
     });
 ```
 Creating claims is similar to creating roles
 
 ```
 //Syntax
-gateman.createClaim(claimName, callback);
+gateman.createClaim(claimName);
 
 //Example
-gateman.createClaim("delete", (err, claim)=>{
+gateman.createClaim("delete").then((claim)=>{
         console.log(claim);
+    }).catch((err)=>{
+        console.log(err);
     });
 ```
 
@@ -56,7 +60,7 @@ gateman.getRoles((err, data)=>{
 });
 ```
 
-### Allowing members of a role to perform a claim/claim
+### Allowing members of a role to perform a claim
 Adding claims to roles is made extremely easy. You do not have to create a claim in advance. Simply pass the name of the claim, and Gateman will create it if it doesn't exist.
 
 ```
@@ -72,7 +76,7 @@ gateman.createRole("admin", (err, role)=>{
 //this provides every member of the admin role the claim to delete
 ```
 
-### Disallowing members of a role from performing a claim/claim
+### Disallowing members of a role from performing a claim
 Retracting claims from a role is very easy, you just need the rolename and claimname
 
 ```
@@ -100,7 +104,7 @@ module.exports = mongoose.model('User',UserSchema)
 
 After setting up your user model, you can call gateman methods on your mongoose user model.
 
-### Allowing users to perform a claim/claim
+### Allowing users to perform a claim
 ```
 //Example
 
