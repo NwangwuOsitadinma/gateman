@@ -18,7 +18,7 @@ Before using gateman in your node application, you'll have to import the gateman
 
 ```
 var mongoose = require('mongoose');
-var gateman = require("gateman").GateMan(mongoose);
+var gateman = require("gatemanjs").GateMan(mongoose);
 ```
 
 ### Creating roles & claims
@@ -118,7 +118,7 @@ It is important to set up your User model to extend the HasRolesAndClaims class 
 
 ```
 const mogoose = require('mongoose');
-const hasRolesAndClaims = require('gateman').hasRolesAndClaims(mogoose);
+const hasRolesAndClaims = require('gatemanjs').hasRolesAndClaims(mogoose);
 
 var UserSchema =  mongoose.Schema({
     name: String,
