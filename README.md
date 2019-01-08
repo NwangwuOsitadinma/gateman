@@ -26,22 +26,26 @@ You have to create a role before using it in your application, Gateman provides 
 
 ```
 //Syntax
-gateman.createRole(roleName, callback);
+gateman.createRole(roleName);
 
 //Example
-gateman.createRole("admin", (err, role)=>{
+gateman.createRole("admin").then((role)=>{
         console.log(role);
+    }).catch((err)=>{
+        console.log(err);
     });
 ```
 Creating claims is similar to creating roles
 
 ```
 //Syntax
-gateman.createClaim(claimName, callback);
+gateman.createClaim(claimName);
 
 //Example
-gateman.createClaim("delete", (err, claim)=>{
+gateman.createClaim("delete").then((claim)=>{
         console.log(claim);
+    }).catch((err)=>{
+        console.log(err);
     });
 ```
 
@@ -51,12 +55,14 @@ gateman.createClaim("delete", (err, claim)=>{
 gateman.getRoles(callback);
 
 //Example
-gateman.getRoles((err, data)=>{
-    console.log(data);
+gateman.getRoles().then(roles=>{
+    //roles is a collection of existing roles
+}).catch(err=>{
+    //err contains the error message, if any
 });
 ```
 
-### Allowing members of a role to perform a claim/claim
+### Allowing members of a role to perform a claim
 Adding claims to roles is made extremely easy. You do not have to create a claim in advance. Simply pass the name of the claim, and Gateman will create it if it doesn't exist.
 
 ```
@@ -65,20 +71,45 @@ gateman.allow('role').to('claim'); //for an existing role
 You can also assign a claim to a role immediately after creating it
 
 ```
-gateman.createRole("admin", (err, role)=>{
-        gateman.allow("admin").to("delete");
+gateman.createRole("admin").then(role=>{
+    gateman.allow("admin").to("delete").then(result=>{
+        //result is true if claim was assigned successfully
+    }).catch(err=>{
+        //err contains the error message, if any
     });
+})
 
 //this provides every member of the admin role the claim to delete
 ```
 
-### Disallowing members of a role from performing a claim/claim
+### Disallowing members of a role from performing a claim
 Retracting claims from a role is very easy, you just need the rolename and claimname
 
 ```
-gateman.disallow('role').from('claim');
+gateman.disallow('role').from('claim').then(result=>{
+    //result is true if claim was retracted
+}).catch(err=>{
+    //err contains any error message, if any
+});
 
 //Gateman does nothing if the role doesn't possess the claim
+```
+
+### Checking for Role claims
+Checking if a Claim has been assigned to a Role can be done this way
+
+```
+gateman.role('rolename').can('claimname').then(result=>{
+    //result is true if the claim has been assigned, else it will be false
+});
+
+//Checking for errors
+
+gateman.role('rolename').can('claimname').then(result=>{
+    //you can user result here
+}).catch(err=>{
+    //err contains error message if any
+});
 ```
 
 ### Using gateman with user models
@@ -87,7 +118,7 @@ It is important to set up your User model to extend the HasRolesAndClaims class 
 
 ```
 const mogoose = require('mongoose');
-const hasRolesAndclaims = require('gateman').hasRolesAndClaims(mogoose);
+const hasRolesAndClaims = require('gateman').hasRolesAndClaims(mogoose);
 
 var UserSchema =  mongoose.Schema({
     name: String,
@@ -100,7 +131,7 @@ module.exports = mongoose.model('User',UserSchema)
 
 After setting up your user model, you can call gateman methods on your mongoose user model.
 
-### Allowing users to perform a claim/claim
+### Allowing users to perform a claim
 ```
 //Example
 
