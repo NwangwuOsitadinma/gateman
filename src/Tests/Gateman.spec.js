@@ -175,18 +175,4 @@ describe('Gateman Roles',function(){
     })
 })
 
-describe('Role and Claim Assignment', function(){
-    beforeEach('ensuring everything is set up',function(done){
-        console.log('before assignment');
-        mongoose.connect('mongodb://localhost:27017/GateManTest',{useNewUrlParser: true});
-        GateMan.removeClaim('turn-water-into-wine')
-        .then((d)=>{})
-        .catch((err)=>{console.log(err)});
-        done()
-    });
-    afterEach('ensuring everything is cleaned up',function(done){
-        console.log('after');
-        mongoose.disconnect();
-        done();
-    });
-})
+
