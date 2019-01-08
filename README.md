@@ -9,7 +9,7 @@ Gatemanjs is an authorization system designed to manage roles and claims in node
 You can install gateman using npm package manager. 
 
 ```
-npm install gateman
+npm install gatemanjs
 ```
 
 ## Usage
