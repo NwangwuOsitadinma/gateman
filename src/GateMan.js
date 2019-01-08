@@ -230,6 +230,47 @@ class GateMan {
            });
        });
     }
+
+    /**
+     * Checks if a Role cannot perform a Claim
+     * @param {A string that represents the name of the Claim} claimName 
+     */
+    cannot(claimName){
+        //find claim, role, then check if it has the claimName
+       return new Promise((resolve, reject)=>{
+           claim.findOne({name: claimName}, (err, claim)=>{
+               if (err){
+                   reject(err);
+               } else {
+                   if (claim){
+                        role.findOne({name: this.roleName}, (err, role)=>{
+                            if (err) {
+                                reject(err);
+                            } else {
+                                if (role){
+                                    roleClaim.findOne({role: role._id, claim:claim._id}, (err, roleClaim)=>{
+                                        if (err){
+                                            reject(err);
+                                        } else {
+                                            if (roleClaim){
+                                                resolve(false);
+                                            } else {
+                                                resolve(true);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    resolve("role does not exist");
+                                }
+                            }
+                            });
+                   } else {
+                       reject("claim does not exist");
+                   }
+               }
+           });
+       });
+    }
 }
 
 module.exports = GateMan;
