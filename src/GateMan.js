@@ -46,7 +46,7 @@ class GateMan {
      */
     allow(role){
         this.operation = 'allow';
-        this.role = role;
+        this.roler = role;
         return this;
     }
 
@@ -55,7 +55,7 @@ class GateMan {
      */
     dissallow(role){
         this.operation = 'dissallow';
-        this.role = role;
+        this.roler = role;
         return this;
     }
 
@@ -67,7 +67,7 @@ class GateMan {
         return new Promise((resolve,reject)=>{
         if (this.operation == 'allow'){
             //find the role, allow was meant to do this
-            role.findOne({name: this.role}, (err, dbRole)=>{
+            role.findOne({name: this.roler}, (err, dbRole)=>{
                 if (dbRole){
                     //assign role here
                     claim.where('name',claimName).limit(1).exec((err, c)=>{
@@ -101,7 +101,7 @@ class GateMan {
     from(claimName){
        return new Promise((resolve, reject)=>{
            if (this.operation == 'dissallow'){
-            role.findOne({name: this.role}, (err, role)=>{
+            role.findOne({name: this.roler}, (err, role)=>{
                 if (role){
                     claim.findOne({name: claimName}, (err, claim)=>{
                         if (err) {
@@ -111,7 +111,7 @@ class GateMan {
                             if (err) {
                                 reject (err);
                             } else {
-                                resolve("claim has been retracted from role");
+                                resolve(true);
                             }
                         });
                     }
@@ -181,13 +181,54 @@ class GateMan {
         });
     }
 
-
+    /**
+     * Checks if a Role can perform a Claim
+     * @param {A string that represents the name of the role} roleName 
+     */
     role(roleName){
-
+        this.roleName = roleName;
+        return this;
     }
 
+    /**
+     * Checks if a Role can perform a Claim
+     * @param {A string that represents the name of the Claim} claimName 
+     */
     can(claimName){
-        
+        //find claim, role, then check if it has the claimName
+       return new Promise((resolve, reject)=>{
+           claim.findOne({name: claimName}, (err, claim)=>{
+               if (err){
+                   reject(err);
+               } else {
+                   if (claim){
+                        role.findOne({name: this.roleName}, (err, role)=>{
+                            if (err) {
+                                reject(err);
+                            } else {
+                                if (role){
+                                    roleClaim.findOne({role: role._id, claim:claim._id}, (err, roleClaim)=>{
+                                        if (err){
+                                            reject(err);
+                                        } else {
+                                            if (roleClaim){
+                                                resolve(true);
+                                            } else {
+                                                resolve(false);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    resolve("role does not exist");
+                                }
+                            }
+                            });
+                   } else {
+                       reject("claim does not exist");
+                   }
+               }
+           });
+       });
     }
 }
 
