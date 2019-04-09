@@ -5,8 +5,9 @@ var roleClaim = require('./Models/RoleClaim');
 class GateMan {
 
     /**
-     * Provide a valid mongoose connection object that will be used to store application credentials
-     * @param {A mongoose connection object} mongoose 
+     * Contains methods for managing application roles and claims
+     * * Provide a valid mongoose connection object that will be used to store application credentials
+     * @mongoose a mongoose connection object
      */
     constructor(mongoose){
         role = role(mongoose);
@@ -15,38 +16,64 @@ class GateMan {
     }
 
      /**
-      * creates a new gateman role 
-     * @param {A string that represents the name of the claim you want to create} roleName
-     * @returns Promise
+     * creates a new gateman role and returns a role
+     * @param roleName {String} A string that represents the name of the role to be created
+     * #### Usage
+     ```
+     gateman.createRole("rolename").then((role)=>{
+        console.log(role);
+    }).catch((err)=>{
+        console.log(err);
+    });
+    ```
      */
-    createRole(roleName,){
-        return role.create({name: roleName});
+    createRole(roleName){
+        if (roleName=="") return "role name cannot be empty";
+        role.findOne({name: roleName}, (err, dbRole)=>{
+            if (dbRole){
+                return dbRole;
+            } else {
+                return role.create({name: roleName});
+            }
+        });
     }
 
     /**
-     * deletes a gateman role
-     * @param {A string that represents the name of the role to be deleted} roleName 
-     * @returns Promise
+     * deletes an existing gateman role, does nothing if role does not exist
+     * @param roleName {String} A string that represents the name of the role to be removed
+     * #### Usage
+     ```
+     gateman.removeRole("rolename");
+     ``` 
      */
     removeRole(roleName){
         return role.findOneAndDelete({name: roleName});
     }
     /**
-     * returns one gateman role specified by the name given
-     * @param {A string that represents the name of the role to be returned} roleName 
-     * @returns Promise
+     * returns a gateman role specified by the name given
+     * @param roleName {String} A string that represents the name of the role to be returned
+     * #### Usage
+     ```
+     gateman.getRole("rolename").then((role)=>{
+         console.log(role);
+     });
+     ```
      */
     getRole(roleName){
         return role.findOne({name:roleName});
     }
-
-    role(roleName){
-        return this.getRole(roleName);
-    }
     
     /**
      * Allows members of a role to perform a claim
-     * @param {A mongoose object} role
+     * @param role {String} the rolename
+     * #### Usage
+     ```
+     gateman.allow("rolename").to("claim").then(result=>{
+        //result is true if claim was assigned successfully
+    }).catch(err=>{
+        //err contains the error message, if any
+    });
+     ```
      */
     allow(role){
         this.operation = 'allow';
@@ -56,8 +83,18 @@ class GateMan {
 
     /**
      * Dissallows a member of a role from performing a claim
+     * @param role {String} the rolename
+     * #### Usage
+     ```
+     gateman.disallow('rolename').from('claim').then(result=>{
+        //result is true if claim was retracted
+    }).catch(err=>{
+        //err contains any error message, if any
+    });
+    //Gateman does nothing if the role doesn't possess the claim
+     ```
      */
-    dissallow(role){
+    disallow(role){
         this.operation = 'dissallow';
         this.roler = role;
         return this;
@@ -65,7 +102,15 @@ class GateMan {
 
     /**
      * pass in the claim to be assigned to a role
-     * @param {pass a claim as a string if you called allow} claimName 
+     * @param claimName {String} pass a claim as a string if you called allow
+     * #### Usage
+     ```
+     gateman.allow("rolename").to("claim").then(result=>{
+        //result is true if claim was assigned successfully
+    }).catch(err=>{
+        //err contains the error message, if any
+    });
+     ```
      */
     to (claimName){
         return new Promise((resolve,reject)=>{
@@ -109,8 +154,17 @@ class GateMan {
     }
 
     /**
-     * pass in the claim
-     * @param {the claim to retract from a role} claimName
+     * pass in the claim to be retracted from a role
+     * @param claimName {String} the claim to retract from a role
+     * #### Usage
+     ```
+     gateman.disallow('rolename').from('claim').then(result=>{
+        //result is true if claim was retracted
+    }).catch(err=>{
+        //err contains any error message, if any
+    });
+    //Gateman does nothing if the role doesn't possess the claim
+     ```
      */
     from(claimName){
        return new Promise((resolve, reject)=>{
@@ -136,8 +190,15 @@ class GateMan {
     }
 
     /**
-     * Returns roles existing in the system
-     * @returns {Promise}
+     * Returns existing roles in the system
+     * #### Usage
+     ```
+     gateman.getRoles().then(roles=>{
+        //roles is a collection of existing roles
+    }).catch(err=>{
+        //err contains the error message, if any
+    });
+     ```
      */
     getRoles(){
         return role.find({});
@@ -145,20 +206,36 @@ class GateMan {
 
     /**
      * Creates a new claim
-     * @param {A string that represents the name of the claim} claimName 
+     * @param claimName {String} A string that represents the name of the claim
+     * #### Usage
+     ```
+     gateman.createClaim("delete").then((claim)=>{
+        console.log(claim);
+    }).catch((err)=>{
+        console.log(err);
+    });
+     ```
      * @returns Promise 
      */
     createClaim(claimName){
-        return claim.create({
-            name: claimName
+        if (claimName=="") return "claim name cannot be empty";
+        claim.findOne({name: claimName}, (err, dbClaim)=>{
+            if (dbClaim){
+                return dbClaim;
+            } else {
+                return claim.create({name: claimName});
+            }
         });
     }
 
 
     /**
-     * Deletes a gateman claim 
-     * @param {A string that represents the name of the claim to be deleted} claimName 
-     * @returns Promise
+     * Deletes an existing claim 
+     * @param claimName {String} A string that represents the name of the claim to be deleted 
+     * #### Usage
+     ```
+     gateman.removeClaim("claimname");
+     ``` 
      */
     removeClaim(claimName){
         return claim.findOneAndDelete({name: claimName});
@@ -166,7 +243,14 @@ class GateMan {
 
     /**
      * Returns all claims existing in the system
-     * @returns Promise
+     * #### Usage
+     ```
+     gateman.getClaims().then(claims=>{
+        //claims is a collection of existing claims
+    }).catch(err=>{
+        //err contains the error message, if any
+    });
+     ```
      */
     getClaims(){
         return claim.find({});
@@ -174,8 +258,15 @@ class GateMan {
 
     /**
      * Returns one claim that matches the claimName given
-     * @param {String - The claimName you want to find} claimName 
-     * @returns Promise
+     * @param claimName {String} - The name of the claim to find
+     * #### Usage
+     ```
+     gateman.getClaim().then(claim=>{
+        //use claim here
+    }).catch(err=>{
+        //err contains the error message, if any
+    });
+     ```
      */
     getClaim(claimName){
         return claim.findOne({name:claimName});
@@ -184,8 +275,14 @@ class GateMan {
 
     /**
      * Returns an array of claims a role can perform
-     * @param {A string that represents the name of the role} roleName 
-     * @param {A callback function that runs after claims are found} cb 
+     * @param roleName {String} represents the name of the role
+     * @param cb {Function} A callback function that runs after claims are found
+     * #### Usage
+     ```
+     gateman.getRoleClaims("admin", function(err, claims){
+         console.log(claims);
+     })
+     ```
      */
     getRoleClaims(roleName, cb){
         role.findOne({name: roleName}, (err, role)=>{
@@ -196,8 +293,14 @@ class GateMan {
     }
 
     /**
-     * Checks if a Role can perform a Claim
-     * @param {A string that represents the name of the role} roleName 
+     * Checks if a Role can perform a Claim, must be used with `can`
+     * @param roleName {String} A string that represents the name of the role 
+     * #### Usage
+     ```
+     gateman.role('rolename').can('claimname').then(result=>{
+        //result is true if the claim has been assigned, else it will be false
+    });
+     ```
      */
     role(roleName){
         this.roleName = roleName;
@@ -205,8 +308,14 @@ class GateMan {
     }
 
     /**
-     * Checks if a Role can perform a Claim
-     * @param {A string that represents the name of the Claim} claimName 
+     * Checks if a Role can perform a Claim, must be used after `gateman.role()`
+     * @param claimName {String} A string that represents the name of the Claim 
+     * #### Usage
+      ```
+     gateman.role('rolename').can('claimname').then(result=>{
+        //result is true if the claim has been assigned, else it will be false
+    });
+     ```
      */
     can(claimName){
         //find claim, role, then check if it has the claimName
@@ -246,8 +355,14 @@ class GateMan {
     }
 
     /**
-     * Checks if a Role cannot perform a Claim
-     * @param {A string that represents the name of the Claim} claimName 
+     * Checks if a Role cannot perform a Claim, must be used after `gateman.role()`
+     * @param claimName {String} A string that represents the name of the Claim 
+     * #### Usage
+      ```
+     gateman.role('rolename').cannnot('claimname').then(result=>{
+        //result is false if the claim has been assigned, else it will be true
+    });
+     ```
      */
     cannot(claimName){
         //find claim, role, then check if it has the claimName
