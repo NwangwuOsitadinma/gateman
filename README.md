@@ -207,12 +207,33 @@ User.findOne({name: "chioma"}, (err, user)=>{
 //To verify if a User can perform an claim
 
 User.findOne({name: "chioma"}, (err, user)=>{
-        user.can("claim").then((hasClaim)=>{
+        user.can("claim").then((userHasClaim)=>{
             if (userHasClaim){
                 //user can perform claim
             }
         });
     });
+```
+
+### Retrieving User Roles and Claims
+Gateman provides an easy way of retrieving a User's roles and/or claims
+
+```
+//Returns a collection of Roles assigned to a User
+
+User.findOne({name: "chioma"}, (err, user)=>{
+     user.getRolesForUser().then((roles)=>{
+        console.log(roles);
+    });
+});
+
+//Returns a collection of Claims a User can perform
+
+User.findOne({name: "chioma"}, (err, user)=>{
+    user.getClaimsForUser().then((claims)=>{
+        console.log(claims);
+    });
+});
 ```
 
 ## Documentation

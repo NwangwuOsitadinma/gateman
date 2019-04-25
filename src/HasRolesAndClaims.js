@@ -19,7 +19,18 @@ class HasRolesAndClaims {
 
     /**
      * allows a user perform a claim, does nothing if user already has the claim
-     * @param {A string that represents the claim  you want to assign to a user} claimName 
+     * @param claimName {String} represents the claim  you want to assign to a user
+     * #### Usage
+     ```
+     UserModel.findOne({name: "chioma"}, (err, user)=>{
+        user.allow("claim")
+            .then((userClaim)=>{
+                console.log(userClaim);
+        }).catch((err)=>{
+            console.log(err);
+        });
+     });
+     ```
      */
 
   allow(claimName){
@@ -53,7 +64,18 @@ class HasRolesAndClaims {
 
     /**
      * disallows a user from performing a particular claim
-     * @param {A string that represents the claim you want to retract from a user} claimName 
+     * @param claimName {string} represents the claim you want to retract from a user
+     * #### Usage
+     ```
+     UserModel.findOne({name: "chioma"}, (err, user)=>{
+        user.disallow("claim")
+            .then((message)=>{
+                console.log(message);
+            }).catch((err)=>{
+                console.log(err);
+            });
+        });
+     ```
      */
     disallow(claimName){
         return new Promise((resolve,reject)=>{
@@ -84,7 +106,18 @@ class HasRolesAndClaims {
 
     /**
      * assigns a role to a user directly
-     * @param {A string that represents the role you want to assign to a user} roleName 
+     * @param roleName {string} represents the role you want to assign to a user
+     * #### Usage
+     ```
+     UserModel.findOne({name: "chioma"}, (err, user)=>{
+        user.assign("role")
+            .then((userRole)=>{
+                console.log(userRole);
+            }).catch((err)=>{
+                console.log(err);
+            });
+        });
+     ```
      */
 
     assign(roleName){
@@ -118,7 +151,18 @@ class HasRolesAndClaims {
 
     /**
      * retracts a role from a user directly
-     * @param {A string that represents the role you want to retract from the user} roleName 
+     * @param roleName {string} represents the role you want to retract from the user 
+     * #### Usage
+     ```
+     UserModel.findOne({name: "chioma"}, (err, user)=>{
+        user.retract("role")
+            .then((message)=>{
+                console.log(message);
+            }).catch((err)=>{
+                console.log(err);
+            });
+        });
+     ```
      */
     retract(roleName){
         return new Promise((resolve,reject)=>{
@@ -148,8 +192,18 @@ class HasRolesAndClaims {
     }
 
     /**
-     * checks whether a user has the ability to perform an action
-     * @param {a string representing the claim name} claimName 
+     * checks whether a user has the ability to perform a claim
+     * @param claimName {string} represents the claim name 
+     * #### Usage
+     ```
+     User.findOne({name: "chioma"}, (err, user)=>{
+        user.can("claim").then((userHasClaim)=>{
+            if (userHasClaim){
+                //user can perform claim
+            }
+        });
+    });
+     ```
      */
     can(claimName){
         return new Promise ((resolve,reject)=>{
@@ -202,8 +256,18 @@ class HasRolesAndClaims {
     }
 
     /**
-     * checks whether a user does not have the ability to perform an action
-     * @param {a string representing the claim name} claimName
+     * checks whether a user does not have the ability to perform a claim
+     * @param claimName {string} represents the claim name
+     * #### Usage
+     ```
+      User.findOne({name: "chioma"}, (err, user)=>{
+        user.cannot("claim").then((noClaim)=>{
+            if (noClaim){
+                //user cannot perform claim
+            }
+        });
+    });
+     ```
      */
     cannot(claimName){
         return new Promise((resolve,reject)=>{
@@ -254,8 +318,18 @@ class HasRolesAndClaims {
     }
 
     /**
-     * checks  if a user is a member of a role
-     * @param {A string representing the role name} roleName 
+     * checks if a user is a member of a role
+     * @param roleName {string} represents the role name
+     * #### Usage
+     ```
+     User.findOne({name: "chioma"}, (err, user)=>{
+        user.isA("role").then((userHasRole)=>{
+            if (userHasRole){
+                //user belongs to role
+            }
+        });
+    });
+     ```
      */
     isA(roleName){
         return new Promise ((resolve, reject)=>{
@@ -277,16 +351,36 @@ class HasRolesAndClaims {
     }
 
     /**
-     * checks  if a user is a member of a role
-     * @param {A string representing the role name} roleName 
+     * checks if a user is a member of a role
+     * @param roleName {string} representing the role name
+     * #### Usage
+     ```
+     User.findOne({name: "chioma"}, (err, user)=>{
+        user.isAn("role").then((userHasRole)=>{
+            if (userHasRole){
+                //user belongs to role
+            }
+        });
+    });
+     ```
      */
     isAn(roleName){
         return this.isA(roleName);
     }
 
     /**
-     * checks  if a user is not a member of a role
-     * @param {A string representing the role name} roleName 
+     * checks if a user is not a member of a role
+     * @param roleName {string} represents the role name 
+     * #### Usage
+     ```
+     User.findOne({name: "chioma"}, (err, user)=>{
+        user.isNotA("role").then((result)=>{
+            if (result){
+                //user does not belongs to role
+            }
+        });
+    });
+     ```
     */
     isNotA(roleName){
         return new Promise ((resolve,reject)=>{
@@ -307,8 +401,18 @@ class HasRolesAndClaims {
     }
 
     /**
-     * checks  if a user is not a member of a role
-     * @param {A string representing the role name} roleName 
+     * checks if a user is not a member of a role
+     * @param roleName {string} represents the role name
+     * #### Usage
+     ```
+     User.findOne({name: "chioma"}, (err, user)=>{
+        user.isNotAn("role").then((result)=>{
+            if (result){
+                //user does not belongs to role
+            }
+        });
+    });
+     ``` 
     */
     isNotAn(roleName){
        return this.isNotA(roleName);
@@ -316,6 +420,14 @@ class HasRolesAndClaims {
 
     /**
      * Returns a collection of Roles assigned to a User
+     * #### Usage
+     ```
+     User.findOne({name: "chioma"}, (err, user)=>{
+        user.getRolesForUser().then((roles)=>{
+            console.log(roles);
+        });
+    });
+     ```
      */
     getRolesForUser(){
         var result = [];
@@ -348,9 +460,16 @@ class HasRolesAndClaims {
 
     /**
      * Returns a collection of Claims a User can perform
-     * @param {A callback function to execute after fetching claims} cb 
+     * #### Usage
+     ```
+     User.findOne({name: "chioma"}, (err, user)=>{
+        user.getClaimsForUser().then((claims)=>{
+            console.log(claims);
+        });
+    });
+     ```
      */
-    getClaimsForUser(cb){
+    getClaimsForUser(){
         var result = [];
         return new Promise ((resolve,reject)=>{
             userRole.find({user:this._id},(err,userRoles)=>{
