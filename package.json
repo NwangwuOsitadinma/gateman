@@ -1,6 +1,6 @@
 {
   "name": "gatemanjs",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Gateman is package for handling user authorization in node-mongo applications",
   "main": "index.js",
   "scripts": {
