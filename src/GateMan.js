@@ -29,13 +29,20 @@ class GateMan {
      */
     createRole(roleName){
         if (roleName=="") return "role name cannot be empty";
-        role.findOne({name: roleName}, (err, dbRole)=>{
-            if (dbRole){
-                return dbRole;
-            } else {
-                return role.create({name: roleName});
-            }
-        });
+        return new Promise((resolve,reject)=>{
+            role.findOne({name: roleName}, (err, dbRole)=>{
+                if (err){
+                   reject(err)
+                } else if(dbRole){
+                    resolve(dbRole)
+                }else{
+                    role.create({name: roleName}, (err, newDbRole)=>{
+                        if(err)reject(err)
+                        resolve(newDbRole)
+                    });
+                }
+            });
+        })
     }
 
     /**
