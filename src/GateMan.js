@@ -29,13 +29,20 @@ class GateMan {
      */
     createRole(roleName){
         if (roleName=="") return "role name cannot be empty";
-        role.findOne({name: roleName}, (err, dbRole)=>{
-            if (dbRole){
-                return dbRole;
-            } else {
-                return role.create({name: roleName});
-            }
-        });
+        return new Promise((resolve,reject)=>{
+            role.findOne({name: roleName}, (err, dbRole)=>{
+                if (err){
+                   reject(err)
+                } else if(dbRole){
+                    resolve(dbRole)
+                }else{
+                    role.create({name: roleName}, (err, newDbRole)=>{
+                        if(err)reject(err)
+                        resolve(newDbRole)
+                    });
+                }
+            });
+        })
     }
 
     /**
@@ -219,13 +226,21 @@ class GateMan {
      */
     createClaim(claimName){
         if (claimName=="") return "claim name cannot be empty";
-        claim.findOne({name: claimName}, (err, dbClaim)=>{
-            if (dbClaim){
-                return dbClaim;
-            } else {
-                return claim.create({name: claimName});
-            }
-        });
+        return new Promise((resolve, reject)=>{
+            claim.findOne({name: claimName}, (err, dbClaim)=>{
+                if(err){
+                    reject(err)
+                }
+                else if (dbClaim){
+                    resolve(dbClaim)
+                } else {
+                     claim.create({name: claimName}, (err, newDbClaim)=>{
+                         if(err)reject(err)
+                         resolve(newDbClaim)
+                     });
+                }
+            });
+        })
     }
 
 
