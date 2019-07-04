@@ -4,7 +4,7 @@
   "description": "Gateman is package for handling user authorization in node-mongo applications",
   "main": "index.js",
   "scripts": {
-    "test": "find ./tests -name '*.spec.js' | xargs mocha -R spec"
+    "test": "find ./src/Tests -name '*.spec.js' | xargs mocha -R spec"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,10 @@
   },
   "homepage": "https://github.com/NwangwuOsitadinma/gateman#readme",
   "dependencies": {
-    "express": "^4.16.3",
-    "mongoose": "^5.2.12",
     "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1"
+    "chai-as-promised": "^7.1.1",
+    "express": "^4.16.3",
+    "mocha": "^6.1.4",
+    "mongoose": "^5.2.12"
   }
 }

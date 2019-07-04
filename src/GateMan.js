@@ -226,13 +226,21 @@ class GateMan {
      */
     createClaim(claimName){
         if (claimName=="") return "claim name cannot be empty";
-        claim.findOne({name: claimName}, (err, dbClaim)=>{
-            if (dbClaim){
-                return dbClaim;
-            } else {
-                return claim.create({name: claimName});
-            }
-        });
+        return new Promise((resolve, reject)=>{
+            claim.findOne({name: claimName}, (err, dbClaim)=>{
+                if(err){
+                    reject(err)
+                }
+                else if (dbClaim){
+                    resolve(dbClaim)
+                } else {
+                     claim.create({name: claimName}, (err, newDbClaim)=>{
+                         if(err)reject(err)
+                         resolve(newDbClaim)
+                     });
+                }
+            });
+        })
     }
 
 
