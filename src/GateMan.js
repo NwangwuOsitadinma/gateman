@@ -225,22 +225,37 @@ class GateMan {
      * @returns Promise 
      */
     createClaim(claimName){
+
         if (claimName=="") return "claim name cannot be empty";
-        return new Promise((resolve, reject)=>{
-            claim.findOne({name: claimName}, (err, dbClaim)=>{
-                if(err){
-                    reject(err)
+        return new Promise((resolve,reject)=>{
+            claim.findOne({name: claimName})
+            .then((dbClaim)=>{
+                if(dbClaim){
+                    resolve(dbClaim);
+                }else{
+                    return claim.create({name: claimName})
                 }
-                else if (dbClaim){
-                    resolve(dbClaim)
-                } else {
-                     claim.create({name: claimName}, (err, newDbClaim)=>{
-                         if(err)reject(err)
-                         resolve(newDbClaim)
-                     });
-                }
-            });
+            }).then((newDbClaim)=>{
+                resolve(newDbClaim)
+            }).catch((err)=>{
+                reject(err);
+            })
         })
+        // return new Promise((resolve, reject)=>{
+        //     claim.findOne({name: claimName}, (err, dbClaim)=>{
+        //         if(err){
+        //             reject(err)
+        //         }
+        //         else if (dbClaim){
+        //             resolve(dbClaim)
+        //         } else {
+        //              claim.create({name: claimName}, (err, newDbClaim)=>{
+        //                  if(err)reject(err)
+        //                  resolve(newDbClaim)
+        //              });
+        //         }
+        //     });
+        // })
     }
 
 
@@ -333,7 +348,7 @@ class GateMan {
      ```
      */
     can(claimName){
-        
+
         //find claim, role, then check if it has the claimName
         return new Promise((resolve,reject)=>{
             claim.findOne({name: claimName})
