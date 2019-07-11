@@ -333,40 +333,66 @@ class GateMan {
      ```
      */
     can(claimName){
+        
         //find claim, role, then check if it has the claimName
-       return new Promise((resolve, reject)=>{
-           claim.findOne({name: claimName}, (err, claim)=>{
-               if (err){
-                   reject(err);
-               } else {
-                   if (claim){
-                        role.findOne({name: this.roleName}, (err, role)=>{
-                            if (err) {
-                                reject(err);
-                            } else {
-                                if (role){
-                                    roleClaim.findOne({role: role._id, claim:claim._id}, (err, roleClaim)=>{
-                                        if (err){
-                                            reject(err);
-                                        } else {
-                                            if (roleClaim){
-                                                resolve(true);
-                                            } else {
-                                                resolve(false);
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    resolve("role does not exist");
-                                }
-                            }
-                            });
-                   } else {
-                       reject("claim does not exist");
-                   }
-               }
-           });
-       });
+        return new Promise((resolve,reject)=>{
+            claim.findOne({name: claimName})
+            .then((claim)=>{
+                if(claim){
+                    return role.findOne({name: this.roleName});
+                }else{
+                    reject('Claim does not exist');
+                }
+            }).then((role)=>{
+                if(role){
+                    return roleClaim.findOne({role: role._id, claim: claim._id});
+                }else{
+                    reject('Role does not exist');
+                }
+            }).then((roleClaim) =>{
+                if(roleClaim){
+                    resolve(true);
+                }else{
+                    resolve(false);
+                }
+            }).catch((err)=>{
+                reject(err);
+            });
+        })
+        
+    //    return new Promise((resolve, reject)=>{
+    //        claim.findOne({name: claimName}, (err, claim)=>{
+    //            if (err){
+    //                reject(err);
+    //            } else {
+    //                if (claim){
+    //                     role.findOne({name: this.roleName}, (err, role)=>{
+    //                         if (err) {
+    //                             reject(err);
+    //                         } else {
+    //                             if (role){
+    //                                 roleClaim.findOne({role: role._id, claim:claim._id}, (err, roleClaim)=>{
+    //                                     if (err){
+    //                                         reject(err);
+    //                                     } else {
+    //                                         if (roleClaim){
+    //                                             resolve(true);
+    //                                         } else {
+    //                                             resolve(false);
+    //                                         }
+    //                                     }
+    //                                 });
+    //                             } else {
+    //                                 resolve("role does not exist");
+    //                             }
+    //                         }
+    //                         });
+    //                } else {
+    //                    reject("claim does not exist");
+    //                }
+    //            }
+    //        });
+    //    });
     }
 
     /**
