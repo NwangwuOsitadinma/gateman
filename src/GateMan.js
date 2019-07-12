@@ -174,26 +174,30 @@ class GateMan {
      ```
      */
     from(claimName){
-       return new Promise((resolve, reject)=>{
-           if (this.operation == 'dissallow'){
-            role.findOne({name: this.roler}, (err, role)=>{
-                if (role){
-                    claim.findOne({name: claimName}, (err, claim)=>{
-                        if (err) {
-                            reject(err);
-                        } else {
-                            roleClaim.findOneAndDelete({role: role, claim: claim}, (err)=>{
-                            if (err) {
-                                reject (err);
-                            } else {
-                                resolve(true);
-                            }
-                        });
+        return new Promise((resolve,reject)=>{
+            var roleforDelete;
+            if(this.operation == 'dissallow'){
+                role.findOne({name:this.roler})
+                .then((role)=>{
+                    if(role){
+                        roleforDelete = role;
+                        return claim.findOne({name:claimName});
+                    }else{
+                        reject('The  Role Does Not Exist');
                     }
-                    });
-                }
-            });
-        }});
+                }).then((claim)=>{
+                    if(claim){
+                        return roleClaim.findOneAndDelete({role:roleforDelete, claim:claim});
+                    }else{
+                        reject('The Claim Does Not Exist');
+                    }
+                }).then(()=>{
+                    resolve(true);
+                }).catch((err)=>{
+                    reject(err);
+                });
+            }
+        });
     }
 
     /**
@@ -241,21 +245,6 @@ class GateMan {
                 reject(err);
             })
         })
-        // return new Promise((resolve, reject)=>{
-        //     claim.findOne({name: claimName}, (err, dbClaim)=>{
-        //         if(err){
-        //             reject(err)
-        //         }
-        //         else if (dbClaim){
-        //             resolve(dbClaim)
-        //         } else {
-        //              claim.create({name: claimName}, (err, newDbClaim)=>{
-        //                  if(err)reject(err)
-        //                  resolve(newDbClaim)
-        //              });
-        //         }
-        //     });
-        // })
     }
 
 
@@ -375,39 +364,6 @@ class GateMan {
             });
         })
         
-    //    return new Promise((resolve, reject)=>{
-    //        claim.findOne({name: claimName}, (err, claim)=>{
-    //            if (err){
-    //                reject(err);
-    //            } else {
-    //                if (claim){
-    //                     role.findOne({name: this.roleName}, (err, role)=>{
-    //                         if (err) {
-    //                             reject(err);
-    //                         } else {
-    //                             if (role){
-    //                                 roleClaim.findOne({role: role._id, claim:claim._id}, (err, roleClaim)=>{
-    //                                     if (err){
-    //                                         reject(err);
-    //                                     } else {
-    //                                         if (roleClaim){
-    //                                             resolve(true);
-    //                                         } else {
-    //                                             resolve(false);
-    //                                         }
-    //                                     }
-    //                                 });
-    //                             } else {
-    //                                 resolve("role does not exist");
-    //                             }
-    //                         }
-    //                         });
-    //                } else {
-    //                    reject("claim does not exist");
-    //                }
-    //            }
-    //        });
-    //    });
     }
 
     /**
@@ -421,6 +377,7 @@ class GateMan {
      ```
      */
     cannot(claimName){
+
         return new Promise((resolve, reject) => {
             claim.findOne({name: claimName})
             .then((claim)=>{
@@ -446,40 +403,6 @@ class GateMan {
             })
         })
 
-        //find claim, role, then check if it has the claimName
-    //    return new Promise((resolve, reject)=>{
-    //        claim.findOne({name: claimName}, (err, claim)=>{
-    //            if (err){
-    //                reject(err);
-    //            } else {
-    //                if (claim){
-    //                     role.findOne({name: this.roleName}, (err, role)=>{
-    //                         if (err) {
-    //                             reject(err);
-    //                         } else {
-    //                             if (role){
-    //                                 roleClaim.findOne({role: role._id, claim:claim._id}, (err, roleClaim)=>{
-    //                                     if (err){
-    //                                         reject(err);
-    //                                     } else {
-    //                                         if (roleClaim){
-    //                                             resolve(false);
-    //                                         } else {
-    //                                             resolve(true);
-    //                                         }
-    //                                     }
-    //                                 });
-    //                             } else {
-    //                                 resolve("role does not exist");
-    //                             }
-    //                         }
-    //                         });
-    //                } else {
-    //                    reject("claim does not exist");
-    //                }
-    //            }
-    //        });
-    //    });
     }
 }
 
