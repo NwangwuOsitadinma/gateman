@@ -9,7 +9,6 @@ var GateMan = new gateman(mongoose);
 
 describe('Gateman Claims', function(){
     beforeEach('ensuring the db is fresh',function(done){
-        console.log('before');
         mongoose.connect('mongodb://localhost:27017/GateManTest',{useNewUrlParser: true});
         GateMan.removeClaim('turn-water-into-wine')
         .then((d)=>{})
@@ -17,7 +16,6 @@ describe('Gateman Claims', function(){
         done()
     });
     afterEach('ensuring everything is cleaned up',function(done){
-        console.log('after');
         mongoose.disconnect();
         done();
     });
@@ -94,7 +92,6 @@ describe('Gateman Claims', function(){
 
 describe('Gateman Roles',function(){
     beforeEach('ensuring db is fresh',(done)=>{
-        console.log('before roles');
         mongoose.connect('mongodb://localhost:27017/GateManTest',{useNewUrlParser: true});
         GateMan.removeRole('admin')
         .then((d)=>{})
@@ -102,7 +99,6 @@ describe('Gateman Roles',function(){
         done()
     });
     afterEach('ensuring everything is cleaned up',function(done){
-        console.log('after');
         mongoose.disconnect();
         done();
     });
