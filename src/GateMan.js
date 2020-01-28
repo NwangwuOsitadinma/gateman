@@ -16,33 +16,24 @@ class GateMan {
     }
 
      /**
-     * creates a new gateman role and returns a role
+     * creates a new gateman role and returns the role
      * @param roleName {String} A string that represents the name of the role to be created
      * #### Usage
      ```
-     gateman.createRole("rolename").then((role)=>{
-        console.log(role);
-    }).catch((err)=>{
-        console.log(err);
-    });
+     let role = await gateman.createRole("rolename");
     ```
      */
-    createRole(roleName){
-        if (roleName=="") return "role name cannot be empty";
-        return new Promise((resolve,reject)=>{
-            role.findOne({name: roleName}, (err, dbRole)=>{
-                if (err){
-                   reject(err)
-                } else if(dbRole){
-                    resolve(dbRole)
-                }else{
-                    role.create({name: roleName}, (err, newDbRole)=>{
-                        if(err)reject(err)
-                        resolve(newDbRole)
-                    });
-                }
-            });
-        })
+    async createRole(roleName) {
+        try {
+            if (roleName.trim() === "") throw new Error("role name cannot be empty");
+            if (typeof(roleName) !== 'string') throw new Error("role name must be a string");
+            let dbRole = await role.findOne({ name: roleName });
+            if (dbRole) return dbRole;
+            let newDbRole = await role.create({ name: roleName });
+            return newDbRole;
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     /**
@@ -53,21 +44,32 @@ class GateMan {
      gateman.removeRole("rolename");
      ``` 
      */
-    removeRole(roleName){
-        return role.findOneAndDelete({name: roleName});
+    async removeRole(roleName){
+        try {
+            if (typeof(roleName) !== 'string') throw new Error('role name must be a string');
+            return await role.findOneAndDelete({name: roleName});
+        } catch (error) {
+            throw new Error(error);
+        }        
     }
+
     /**
      * returns a gateman role specified by the name given
      * @param roleName {String} A string that represents the name of the role to be returned
      * #### Usage
      ```
-     gateman.getRole("rolename").then((role)=>{
-         console.log(role);
-     });
+     let role = await gateman.getRole("rolename");
      ```
      */
-    getRole(roleName){
-        return role.findOne({name:roleName});
+    async getRole(roleName){
+        try {
+            if (roleName.trim() === '') return {};
+            if (typeof(roleName) !== 'string') throw new Error('role name must be a string');
+            let role = await role.findOne({name:roleName});
+            return role;
+        } catch (error) {
+            throw new Error(error);
+        }
     }
     
     /**
@@ -75,14 +77,12 @@ class GateMan {
      * @param role {String} the rolename
      * #### Usage
      ```
-     gateman.allow("rolename").to("claim").then(result=>{
-        //result is true if claim was assigned successfully
-    }).catch(err=>{
-        //err contains the error message, if any
-    });
+    await gateman.allow("rolename").to("claim");
      ```
      */
     allow(role){
+        if (role.trim() === '') throw new Error('role name must be provided');
+        if (typeof(role) !== 'string') throw new Error('role name must be a string');
         this.operation = 'allow';
         this.roler = role;
         return this;
@@ -93,15 +93,13 @@ class GateMan {
      * @param role {String} the rolename
      * #### Usage
      ```
-     gateman.disallow('rolename').from('claim').then(result=>{
-        //result is true if claim was retracted
-    }).catch(err=>{
-        //err contains any error message, if any
-    });
+     await gateman.disallow('rolename').from('claim');
     //Gateman does nothing if the role doesn't possess the claim
      ```
      */
     disallow(role){
+        if (role.trim() === '') throw new Error('role name must be provided');
+        if (typeof(role) !== 'string') throw new Error('role name must be a string');
         this.operation = 'dissallow';
         this.roler = role;
         return this;
@@ -112,52 +110,41 @@ class GateMan {
      * @param claimName {String} pass a claim as a string if you called allow
      * #### Usage
      ```
-     gateman.allow("rolename").to("claim").then(result=>{
-        //result is true if claim was assigned successfully
-    }).catch(err=>{
-        //err contains the error message, if any
-    });
+     await gateman.allow("rolename").to("claim");
      ```
      */
-    to (claimName){
-        return new Promise((resolve,reject)=>{
-        if (this.operation == 'allow'){
-            //find the role, allow was meant to do this
-            role.findOne({name: this.roler}, (err, dbRole)=>{
-                if (dbRole){
+    async to(claimName) {
+        try {
+            if (this.operation === 'allow') {
+                //find the role, allow was meant to do this
+                let dbRole = await role.findOne({ name: this.roler });
+                if (dbRole) {
                     //assign role here
-                    claim.where('name',claimName).limit(1).exec((err, c)=>{
-                        if(c.length > 0){
-                            roleClaim.findOne({role:dbRole._id, claim:c[0]._id}, (err, rlclm)=>{
-                                if (err) {
-                                    reject(err);
-                                } else {
-                                    if (rlclm){
-                                        reject("Claim has already been assigned to Role");
-                                    } else {
-                                        roleClaim.create({role:dbRole._id,claim:c[0]._id},function(err,roleClaim){
-                                            if(err) reject(err);
-                                            resolve(true);//we should return a boolean instaed of the roleClaim(I don't thing it's needed for anything)
-                                        });
-                                    }
-                                }
-                            });
-                        }else{
-                            claim.create({name:claimName},(err,claimE) => { 
-                                if(err) reject(err);
-                                roleClaim.create({role:dbRole._id,claim:claimE._id},function(err,roleClaim){
-                                    if(err) throw err;
-                                    resolve(true);
-                                });
-                            });
+                    let c = await claim.where('name', claimName).limit(1).exec();
+                    if (c.length > 0) {
+                        let rlclm = await roleClaim.findOne({ role: dbRole._id, claim: c[0]._id });
+                        if (rlclm) {
+                            return "Claim has already been assigned to Role";
+                        } else {
+                            await roleClaim.create({ role: dbRole._id, claim: c[0]._id });
+                            return;
                         }
-                    });
-                }else{
-                    reject("role not found");
+                    } else {
+                        claim.create({ name: claimName }, (err, claimE) => {
+                            if (err) throw new Error(err);
+                            roleClaim.create({ role: dbRole._id, claim: claimE._id }, function (err, roleClaim) {
+                                if (err) throw err;
+                                return;
+                            });
+                        });
+                    }
+                } else {
+                    throw new Error("role not found");
                 }
-            });
+            }
+        } catch (error) {
+            throw new Error(error);
         }
-    });
     }
 
     /**
@@ -165,50 +152,39 @@ class GateMan {
      * @param claimName {String} the claim to retract from a role
      * #### Usage
      ```
-     gateman.disallow('rolename').from('claim').then(result=>{
-        //result is true if claim was retracted
-    }).catch(err=>{
-        //err contains any error message, if any
-    });
-    //Gateman does nothing if the role doesn't possess the claim
+     await gateman.disallow('rolename').from('claim')
+     //Gateman does nothing if the role doesn't possess the claim
      ```
      */
-    from(claimName){
-       return new Promise((resolve, reject)=>{
-           if (this.operation == 'dissallow'){
-            role.findOne({name: this.roler}, (err, role)=>{
-                if (role){
-                    claim.findOne({name: claimName}, (err, claim)=>{
-                        if (err) {
-                            reject(err);
-                        } else {
-                            roleClaim.findOneAndDelete({role: role, claim: claim}, (err)=>{
-                            if (err) {
-                                reject (err);
-                            } else {
-                                resolve(true);
-                            }
-                        });
-                    }
-                    });
+    async from(claimName) {
+        try {
+            if (this.operation === 'dissallow') {
+                let dbRole = await role.findOne({ name: this.roler });
+                if (dbRole) {
+                    let dbClaim = await claim.findOne({ name: claimName });
+                    roleClaim.findOneAndDelete({ role: dbRole, claim: dbClaim });
+                    return;
                 }
-            });
-        }});
+            }
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     /**
      * Returns existing roles in the system
      * #### Usage
      ```
-     gateman.getRoles().then(roles=>{
-        //roles is a collection of existing roles
-    }).catch(err=>{
-        //err contains the error message, if any
-    });
+    let roles = await gateman.getRoles();
+    console.log(roles); //prints collection of all existing roles
      ```
      */
     getRoles(){
-        return role.find({});
+        try {
+            return role.find({});
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     /**
@@ -216,31 +192,23 @@ class GateMan {
      * @param claimName {String} A string that represents the name of the claim
      * #### Usage
      ```
-     gateman.createClaim("delete").then((claim)=>{
-        console.log(claim);
-    }).catch((err)=>{
-        console.log(err);
-    });
+     await gateman.createClaim("delete");
      ```
      * @returns Promise 
      */
-    createClaim(claimName){
-        if (claimName=="") return "claim name cannot be empty";
-        return new Promise((resolve, reject)=>{
-            claim.findOne({name: claimName}, (err, dbClaim)=>{
-                if(err){
-                    reject(err)
-                }
-                else if (dbClaim){
-                    resolve(dbClaim)
-                } else {
-                     claim.create({name: claimName}, (err, newDbClaim)=>{
-                         if(err)reject(err)
-                         resolve(newDbClaim)
-                     });
-                }
-            });
-        })
+    async createClaim(claimName) {
+        try {
+            if (claimName === "") return "claim name cannot be empty";
+            let dbClaim = await claim.findOne({ name: claimName });
+            if (dbClaim) {
+                return dbClaim;
+            } else {
+                let newDbClaim = await claim.create({ name: claimName });
+                return newDbClaim;
+            }
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
 
@@ -249,7 +217,7 @@ class GateMan {
      * @param claimName {String} A string that represents the name of the claim to be deleted 
      * #### Usage
      ```
-     gateman.removeClaim("claimname");
+     await gateman.removeClaim("claimname");
      ``` 
      */
     removeClaim(claimName){
@@ -260,11 +228,8 @@ class GateMan {
      * Returns all claims existing in the system
      * #### Usage
      ```
-     gateman.getClaims().then(claims=>{
-        //claims is a collection of existing claims
-    }).catch(err=>{
-        //err contains the error message, if any
-    });
+     let claims = await gateman.getClaims();
+     //claims is a collection of existing claims
      ```
      */
     getClaims(){
@@ -276,35 +241,31 @@ class GateMan {
      * @param claimName {String} - The name of the claim to find
      * #### Usage
      ```
-     gateman.getClaim().then(claim=>{
-        //use claim here
-    }).catch(err=>{
-        //err contains the error message, if any
-    });
+     let claim = await gateman.getClaim();
      ```
      */
     getClaim(claimName){
         return claim.findOne({name:claimName});
     }
 
-
     /**
      * Returns an array of claims a role can perform
      * @param roleName {String} represents the name of the role
-     * @param cb {Function} A callback function that runs after claims are found
      * #### Usage
      ```
-     gateman.getRoleClaims("admin", function(err, claims){
-         console.log(claims);
-     })
+     let roleClaims = await gateman.getRoleClaims("rolename");
      ```
      */
-    getRoleClaims(roleName, cb){
-        role.findOne({name: roleName}, (err, role)=>{
-            if (role){
-                roleClaim.find({role: role._id}, cb);
+    async getRoleClaims(roleName){
+        try {
+            let dbRole = await role.findOne({ name: roleName });
+            if (dbRole) {
+                let roleClaims = await roleClaim.find({ role: dbRole._id });
+                return roleClaims;
             }
-        });
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     /**
@@ -312,12 +273,13 @@ class GateMan {
      * @param roleName {String} A string that represents the name of the role 
      * #### Usage
      ```
-     gateman.role('rolename').can('claimname').then(result=>{
-        //result is true if the claim has been assigned, else it will be false
-    });
+     let result = await gateman.role('rolename').can('claimname');
+     //should be true if role has the claim
      ```
      */
     role(roleName){
+        if (roleName.trim() === '') throw new Error('role name must be provided');
+        if (typeof(roleName) !== 'string') throw new Error('role name must be a string');
         this.roleName = roleName;
         return this;
     }
@@ -327,46 +289,28 @@ class GateMan {
      * @param claimName {String} A string that represents the name of the Claim 
      * #### Usage
       ```
-     gateman.role('rolename').can('claimname').then(result=>{
-        //result is true if the claim has been assigned, else it will be false
-    });
+      let result = await gateman.role('rolename').can('claimname');
+      //should be true if role has the claim
      ```
      */
-    can(claimName){
+    async can(claimName) {
         //find claim, role, then check if it has the claimName
-       return new Promise((resolve, reject)=>{
-           claim.findOne({name: claimName}, (err, claim)=>{
-               if (err){
-                   reject(err);
-               } else {
-                   if (claim){
-                        role.findOne({name: this.roleName}, (err, role)=>{
-                            if (err) {
-                                reject(err);
-                            } else {
-                                if (role){
-                                    roleClaim.findOne({role: role._id, claim:claim._id}, (err, roleClaim)=>{
-                                        if (err){
-                                            reject(err);
-                                        } else {
-                                            if (roleClaim){
-                                                resolve(true);
-                                            } else {
-                                                resolve(false);
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    resolve("role does not exist");
-                                }
-                            }
-                            });
-                   } else {
-                       reject("claim does not exist");
-                   }
-               }
-           });
-       });
+        try {
+            let dbClaim = await claim.findOne({ name: claimName });
+            if (dbClaim) {
+                let dbRole = await role.findOne({ name: this.roleName });
+                if (dbRole) {
+                    let roleClm = roleClaim.findOne({ role: dbRole._id, claim: dbClaim._id });
+                    return roleClm ? true : false;
+                } else {
+                    return "role does not exist";
+                }
+            } else {
+                throw new Error("claim does not exist");
+            }
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     /**
@@ -374,46 +318,28 @@ class GateMan {
      * @param claimName {String} A string that represents the name of the Claim 
      * #### Usage
       ```
-     gateman.role('rolename').cannnot('claimname').then(result=>{
-        //result is false if the claim has been assigned, else it will be true
-    });
+      let result = await gateman.role('rolename').cannnot('claimname');
+      //result is false if the role has the claim
      ```
      */
     cannot(claimName){
         //find claim, role, then check if it has the claimName
-       return new Promise((resolve, reject)=>{
-           claim.findOne({name: claimName}, (err, claim)=>{
-               if (err){
-                   reject(err);
-               } else {
-                   if (claim){
-                        role.findOne({name: this.roleName}, (err, role)=>{
-                            if (err) {
-                                reject(err);
-                            } else {
-                                if (role){
-                                    roleClaim.findOne({role: role._id, claim:claim._id}, (err, roleClaim)=>{
-                                        if (err){
-                                            reject(err);
-                                        } else {
-                                            if (roleClaim){
-                                                resolve(false);
-                                            } else {
-                                                resolve(true);
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    resolve("role does not exist");
-                                }
-                            }
-                            });
-                   } else {
-                       reject("claim does not exist");
-                   }
-               }
-           });
-       });
+        try {
+            let dbClaim = await claim.findOne({ name: claimName });
+            if (dbClaim) {
+                let dbRole = await role.findOne({ name: this.roleName });
+                if (dbRole) {
+                    let roleClm = roleClaim.findOne({ role: dbRole._id, claim: dbClaim._id });
+                    return roleClm ? false : true;
+                } else {
+                    return "role does not exist";
+                }
+            } else {
+                throw new Error("claim does not exist");
+            }
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 }
 
