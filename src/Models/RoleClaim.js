@@ -4,18 +4,18 @@ module.exports = (mongoose)=>{
         role: {
             type: mongoose.Schema.Types.ObjectId,
             required: [true,'Sorry, the role is required'],
-            ref: 'Role'
+            ref: 'GatemanRole'
         },
         claim: {
             type: mongoose.Schema.Types.ObjectId,
             required: [true,'Sorry! the claim is required'],
-            ref: 'Claim'
+            ref: 'GatemanClaim'
         }
     });
-    if (mn.includes("RoleClaim")){
-        return mongoose.model('RoleClaim');
+    if (mn.includes("GatemanRoleClaim")){
+        return mongoose.model('GatemanRoleClaim');
     } else {
-        return mongoose.model('RoleClaim',RoleClaimSchema);
+        return mongoose.model('GatemanRoleClaim',RoleClaimSchema);
     }
    
 }

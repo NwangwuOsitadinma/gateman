@@ -8,13 +8,13 @@ module.exports = (mongoose)=>{
         claim: {
             type: mongoose.Schema.Types.ObjectId,
             required: [true,'Sorry, the claim is required'],
-            ref: 'Claim'
+            ref: 'GatemanClaim'
         }
     });
-    if (mn.includes("UserClaim")){
-        return mongoose.model('UserClaim');
+    if (mn.includes("GatemanUserClaim")){
+        return mongoose.model('GatemanUserClaim');
     } else {
-        return mongoose.model('UserClaim',UserClaimSchema);
+        return mongoose.model('GatemanUserClaim',UserClaimSchema);
     }
    
 }
