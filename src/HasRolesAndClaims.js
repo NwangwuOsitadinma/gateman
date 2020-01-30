@@ -22,14 +22,8 @@ class HasRolesAndClaims {
      * @param claimName {String} represents the claim  you want to assign to a user
      * #### Usage
      ```
-     UserModel.findOne({name: "chioma"}, (err, user)=>{
-        user.allow("claim")
-            .then((userClaim)=>{
-                console.log(userClaim);
-        }).catch((err)=>{
-            console.log(err);
-        });
-     });
+     let user = await UserModel.findOne({name: "chioma"});
+     await user.allow("claim");
      ```
      */
 
@@ -59,14 +53,8 @@ class HasRolesAndClaims {
      * @param claimName {string} represents the claim you want to retract from a user
      * #### Usage
      ```
-     UserModel.findOne({name: "chioma"}, (err, user)=>{
-        user.disallow("claim")
-            .then((message)=>{
-                console.log(message);
-            }).catch((err)=>{
-                console.log(err);
-            });
-        });
+     let user = await UserModel.findOne({name: "chioma"});
+     await user.disallow("claim");
      ```
      */
     async disallow(claimName) {
@@ -95,14 +83,8 @@ class HasRolesAndClaims {
      * @param roleName {string} represents the role you want to assign to a user
      * #### Usage
      ```
-     UserModel.findOne({name: "chioma"}, (err, user)=>{
-        user.assign("role")
-            .then((userRole)=>{
-                console.log(userRole);
-            }).catch((err)=>{
-                console.log(err);
-            });
-        });
+     let user = await UserModel.findOne({name: "chioma"});
+     await user.assign("role");
      ```
      */
 
@@ -132,14 +114,8 @@ class HasRolesAndClaims {
      * @param roleName {string} represents the role you want to retract from the user 
      * #### Usage
      ```
-     UserModel.findOne({name: "chioma"}, (err, user)=>{
-        user.retract("role")
-            .then((message)=>{
-                console.log(message);
-            }).catch((err)=>{
-                console.log(err);
-            });
-        });
+     let user = await UserModel.findOne({name: "chioma"});
+     await user.retract("role");
      ```
      */
     async retract(roleName) {
@@ -168,13 +144,11 @@ class HasRolesAndClaims {
      * @param claimName {string} represents the claim name 
      * #### Usage
      ```
-     User.findOne({name: "chioma"}, (err, user)=>{
-        user.can("claim").then((userHasClaim)=>{
-            if (userHasClaim){
-                //user can perform claim
-            }
-        });
-    });
+     let user = await User.findOne({name: "chioma"});
+     let userHasClaim = await user.can("claim");
+     if (userHasClaim) {
+        console.log('I have the claim');
+     }
      ```
      */
     async can(claimName) {
@@ -209,13 +183,11 @@ class HasRolesAndClaims {
      * @param claimName {string} represents the claim name
      * #### Usage
      ```
-      User.findOne({name: "chioma"}, (err, user)=>{
-        user.cannot("claim").then((noClaim)=>{
-            if (noClaim){
-                //user cannot perform claim
-            }
-        });
-    });
+      let user = await User.findOne({name: "chioma"});
+      let noClaim = await user.cannot("claim");
+      if (noClaim){
+          console.log('I do not have the claim');
+      }
      ```
      */
     async cannot(claimName) {
@@ -250,13 +222,11 @@ class HasRolesAndClaims {
      * @param roleName {string} represents the role name
      * #### Usage
      ```
-     User.findOne({name: "chioma"}, (err, user)=>{
-        user.isA("role").then((userHasRole)=>{
-            if (userHasRole){
-                //user belongs to role
-            }
-        });
-    });
+     let user = await User.findOne({name: "chioma"});
+     let userHasRole = await user.isA("role");
+     if (userHasRole){
+        //user belongs to role
+      }
      ```
      */
     async isA(roleName) {
@@ -278,13 +248,11 @@ class HasRolesAndClaims {
      * @param roleName {string} representing the role name
      * #### Usage
      ```
-     User.findOne({name: "chioma"}, (err, user)=>{
-        user.isAn("role").then((userHasRole)=>{
-            if (userHasRole){
-                //user belongs to role
-            }
-        });
-    });
+     let user = await User.findOne({name: "chioma"});
+     let userHasRole = await user.isAn("role");
+     if (userHasRole){
+        //user belongs to role
+     }
      ```
      */
     async isAn(roleName) {
@@ -296,13 +264,11 @@ class HasRolesAndClaims {
      * @param roleName {string} represents the role name 
      * #### Usage
      ```
-     User.findOne({name: "chioma"}, (err, user)=>{
-        user.isNotA("role").then((result)=>{
-            if (result){
-                //user does not belongs to role
-            }
-        });
-    });
+     let user = await User.findOne({name: "chioma"});
+     let result = await user.isNotA("role");
+     if (result){
+        //user does not belongs to role
+     }
      ```
     */
     async isNotA(roleName) {
@@ -324,13 +290,11 @@ class HasRolesAndClaims {
      * @param roleName {string} represents the role name
      * #### Usage
      ```
-     User.findOne({name: "chioma"}, (err, user)=>{
-        user.isNotAn("role").then((result)=>{
-            if (result){
-                //user does not belongs to role
-            }
-        });
-    });
+     let user = await User.findOne({name: "chioma"});
+     let result = await user.isNotAn("role");
+     if (result){
+        //user does not belongs to role
+     }
      ``` 
     */
     async isNotAn(roleName) {
@@ -341,11 +305,9 @@ class HasRolesAndClaims {
      * Returns a collection of Roles assigned to a User
      * #### Usage
      ```
-     User.findOne({name: "chioma"}, (err, user)=>{
-        user.getRolesForUser().then((roles)=>{
-            console.log(roles);
-        });
-    });
+     let user = await User.findOne({name: "chioma"}, (err, user)=>{
+     let roles = await user.getRolesForUser();
+     console.log(roles);
      ```
      */
     async getRolesForUser() {
@@ -374,11 +336,9 @@ class HasRolesAndClaims {
      * Returns a collection of Claims a User can perform
      * #### Usage
      ```
-     User.findOne({name: "chioma"}, (err, user)=>{
-        user.getClaimsForUser().then((claims)=>{
-            console.log(claims);
-        });
-    });
+     let user = await User.findOne({name: "chioma"});
+     let claims = await user.getClaimsForUser();
+     console.log(claims);
      ```
      */
     async getClaimsForUser() {
