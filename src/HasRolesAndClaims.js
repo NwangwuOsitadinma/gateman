@@ -1,5 +1,5 @@
 var userClaim = require('./Models/UserClaim');
-var userRole =  require('./Models/UserRole');
+var userRole = require('./Models/UserRole');
 var role = require('./Models/Role');
 var roleClaim = require('./Models/RoleClaim');
 var claim = require('./Models/Claim');
@@ -9,7 +9,7 @@ class HasRolesAndClaims {
      * Provide a valid mongoose connection object that will be used to store application credentials
      * @param {A mongoose connection object} mongoose 
      */
-    constructor(mongoose){
+    constructor(mongoose) {
         userClaim = userClaim(mongoose);
         userRole = userRole(mongoose);
         role = role(mongoose);
@@ -33,33 +33,25 @@ class HasRolesAndClaims {
      ```
      */
 
-  allow(claimName){
-        return new Promise ((resolve,reject)=>{
-            claim.findOne({name: claimName}, (err, claim)=>{
-                if(claim){
-                    userClaim.findOne({user:this._id,claim:claim._id},(e,uc)=>{
-                        if(e){
-                            reject(e)
-                        }
-                        else if(uc){
-                            reject({
-                                message: "this claim was already assigned to the user"
-                            });
-                        } else{
-                            userClaim.create({user:this._id,claim:claim._id},(err,usrClaim) => {
-                                if(err) reject(err);
-                                resolve(usrClaim);
-                            });
-                        }
-                        
-                    });
-                } else{
-                    reject({
-                        message: "The claim does not exist. Consider creating it first"
-                    });
+    async allow(claimName) {
+        try {
+            let dbClaim = await claim.findOne({ name: claimName });
+            if (dbClaim) {
+                let uc = await userClaim.findOne({ user: this._id, claim: dbClaim._id });
+                if (uc) {
+                    return "this claim was already assigned to the user";
+                } else {
+                    let usrClaim = await userClaim.create({ user: this._id, claim: dbClaim._id });
+                    return usrClaim;
                 }
-            });
-        });
+            } else {
+                throw new Error({
+                    message: "The claim does not exist. Consider creating it first"
+                });
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**
@@ -77,31 +69,25 @@ class HasRolesAndClaims {
         });
      ```
      */
-    disallow(claimName){
-        return new Promise((resolve,reject)=>{
-            claim.findOne({name: claimName}, (err, claim)=>{
-                if(claim){
-                    userClaim.findOne({user:this._id,claim:claim._id}, (e,uc)=>{
-                        if(e){
-                            reject(e)
-                        }else if(uc){
-                            userClaim.delete({user:this._id,claim:uc._id},(err,usrClaim)=>{
-                                if(err) reject(err);
-                                resolve(usrClaim);
-                            })
-                        } else{
-                            reject({
-                                message: "this claim was not assigned to the user"
-                            });
-                        }
-                    });
-                }else{
-                    reject({
-                        message: "The claim does not exist. Consider creating it first"
-                    });
+    async disallow(claimName) {
+        try {
+            let dbClaim = await claim.findOne({ name: claimName });
+            if (dbClaim) {
+                let uc = await userClaim.findOne({ user: this._id, claim: dbClaim._id });
+                if (uc) {
+                    await userClaim.delete({ user: this._id, claim: uc._id });
+                    return;
+                } else {
+                    return "this claim was not assigned to the user";
                 }
-            });
-        });
+            } else {
+                throw new Error({
+                    message: "The claim does not exist. Consider creating it first"
+                });
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**
@@ -120,33 +106,25 @@ class HasRolesAndClaims {
      ```
      */
 
-    assign(roleName){
-        return new Promise ((resolve,reject)=>{
-            role.findOne({name: roleName}, (err, role)=>{
-                if(role){
-                    userRole.findOne({user:this._id,role:role._id},(e,rc)=>{
-                        if(e){
-                            reject(e)
-                        }
-                        else if(rc){
-                            reject({
-                                message: "this role was already assigned to the user"
-                            });
-                        } else{
-                            userRole.create({user:this._id,role:role._id},(err,usrRole) => {
-                                if(err) reject(err);
-                                resolve(usrRole);
-                            });
-                        }
-                        
-                    });
-                } else{
-                    reject({
-                        message: "The role does not exist. Consider creating it first"
-                    });
+    async assign(roleName) {
+        try {
+            let dbRole = await role.findOne({ name: roleName });
+            if (dbRole) {
+                let rc = await userRole.findOne({ user: this._id, role: dbRole._id });
+                if (rc) {
+                    return "this role was already assigned to the user";
+                } else {
+                    let usrRole = await userRole.create({ user: this._id, role: role._id });
+                    return usrRole;
                 }
-            });
-        });
+            } else {
+                throw new Error({
+                    message: "The role does not exist. Consider creating it first"
+                });
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**
@@ -164,31 +142,25 @@ class HasRolesAndClaims {
         });
      ```
      */
-    retract(roleName){
-        return new Promise((resolve,reject)=>{
-            role.findOne({name: roleName},(err,role)=>{
-                if(role){
-                    userRole.findOne({user:this._id,role:role._id},(e,rc)=>{
-                        if(e){
-                            reject(e)
-                        }else if(rc){
-                            userRole.delete({user:this._id,role:role._id},(err,usrRole)=>{
-                                if(err) reject(err);
-                                resolve(usrRole);
-                            });
-                        }else{
-                            reject({
-                                message: "this role was not assigned to the user"
-                            });
-                        }
-                    });
-                }else{
-                    reject({
-                        message: "The role does not exist. Consider creating it first"
-                    });
+    async retract(roleName) {
+        try {
+            let dbRole = await role.findOne({ name: roleName });
+            if (dbRole) {
+                let rc = await userRole.findOne({ user: this._id, role: dbRole._id });
+                if (rc) {
+                    await userRole.delete({ user: this._id, role: dbRole._id });
+                    return;
+                } else {
+                    return "this role was not assigned to the user";
                 }
-            });
-        });
+            } else {
+                throw new Error({
+                    message: "The role does not exist. Consider creating it first"
+                });
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**
@@ -205,54 +177,31 @@ class HasRolesAndClaims {
     });
      ```
      */
-    can(claimName){
-        return new Promise ((resolve,reject)=>{
-            claim.findOne({name: claimName}, (err,c)=>{
-                if(c){
-                    userRole.find({user:this._id},(e,ur) =>{
-                        if(e){
-                            reject(e)
-                        } 
-                        else if(ur){
-                            ur.forEach((u) => {
-                                roleClaim.findOne({role:u.role,claim:c._id},(err,rc)=>{
-                                    if(err){
-                                        reject(err)
-                                    }
-                                    else if(rc){
-                                        resolve(true);
-                                    }else{
-                                        userClaim.findOne({user:u.user,claim:c._id},(err,uc)=>{
-                                            if(err){
-                                                reject(err);
-                                            }
-                                            else if(uc){
-                                                resolve (true);
-                                            }else{
-                                                resolve(false);
-                                            }
-                                        });
-                                    }
-                                });
-                            });
-                        }else{
-                            userClaim.findOne({user:u.user,claim:claimName},(err,uc)=>{
-                                if(err){
-                                    reject(err);
-                                }
-                                else if(uc){
-                                    resolve (true);
-                                }else{
-                                    resolve(false);
-                                }
-                            });
+    async can(claimName) {
+        try {
+            let c = await claim.findOne({ name: claimName });
+            if (c) {
+                let ur = await userRole.find({ user: this._id });
+                if (ur) {
+                    ur.forEach((u) => {
+                        let rc = await roleClaim.findOne({ role: u.role, claim: c._id });
+                        if (rc) {
+                            return true;
+                        } else {
+                            let uc = await userClaim.findOne({ user: u.user, claim: c._id });
+                            return uc ? true : false;
                         }
                     });
-                } else{
-                    reject("Error, user or claim does not exist");
+                } else {
+                    let uc = await userClaim.findOne({ user: u.user, claim: claimName });
+                    return uc ? true : false;
                 }
-            });
-        });
+            } else {
+                throw new Error("Error, user or claim does not exist");
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**
@@ -269,52 +218,31 @@ class HasRolesAndClaims {
     });
      ```
      */
-    cannot(claimName){
-        return new Promise((resolve,reject)=>{
-            claim.findOne({name: claimName},(err,c)=>{
-                if(c){
-                    userRole.find({user:this._id},(e,urs)=>{
-                        if(e){
-                            reject(e);
-                        }else if(urs){
-                            urs.forEach((ur)=>{
-                                roleClaim.findOne({role:ur.role,claim:c._id},(err,rc)=>{
-                                    if(err){
-                                        reject(err);
-                                    }
-                                    else if(rc){
-                                        resolve(false);
-                                    } else{
-                                        userClaim.findOne({user:ur.user,claim:c._id},(err,uc)=>{
-                                            if(err){
-                                                reject(err);
-                                            }else if(uc){
-                                                resolve(false);
-                                            }else{
-                                                resolve(true);
-                                            }
-                                        });
-                                    }
-                                })
-                            })
-                        }else{
-                            userClaim.findOne({user:ur.user,claim:c._id},(err,uc)=>{
-                                if(err){
-                                    reject(err);
-                                }else if(uc){
-                                    resolve(false);
-                                }else{
-                                    resolve(true);
-                                }
-                            });
+    async cannot(claimName) {
+        try {
+            let c = await claim.findOne({ name: claimName });
+            if (c) {
+                let urs = await userRole.find({ user: this._id });
+                if (urs) {
+                    urs.forEach(async (ur) => {
+                        let rc = await roleClaim.findOne({ role: ur.role, claim: c._id });
+                        if (rc) {
+                            return false;
+                        } else {
+                            let uc = await userClaim.findOne({ user: ur.user, claim: c._id });
+                            return uc ? false : true;
                         }
-
-                    })
-                } else{
-                    reject("Error, user or claim does not exist");
+                    });
+                } else {
+                    let uc = await userClaim.findOne({ user: ur.user, claim: c._id });
+                    return uc ? false : true;
                 }
-            })
-        })
+            } else {
+                throw new Error("Error, user or claim does not exist");
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**
@@ -331,23 +259,18 @@ class HasRolesAndClaims {
     });
      ```
      */
-    isA(roleName){
-        return new Promise ((resolve, reject)=>{
-            role.findOne({name: roleName}, (err,r)=>{
-                if(r){
-                    userRole.findOne({user:this._id,role:r._id},(err,ur)=>{
-                        if(ur){
-                            resolve(true);
-                        }else{
-                            resolve(false);
-                        }
-                    });
-                } else{
-                    reject("Error, user or role does not exist");
-                }
-            });
+    async isA(roleName) {
+        try {
+            let r = await role.findOne({ name: roleName });
+            if (r) {
+                let ur = await userRole.findOne({ user: this._id, role: r._id });
+                return ur ? true : false;
+            } else {
+                throw new Error("Error, user or role does not exist");
+            }
+        } catch (error) {
+            throw error;
         }
-        );
     }
 
     /**
@@ -364,8 +287,8 @@ class HasRolesAndClaims {
     });
      ```
      */
-    isAn(roleName){
-        return this.isA(roleName);
+    async isAn(roleName) {
+        return await this.isA(roleName);
     }
 
     /**
@@ -382,22 +305,18 @@ class HasRolesAndClaims {
     });
      ```
     */
-    isNotA(roleName){
-        return new Promise ((resolve,reject)=>{
-            role.findOne({name: roleName}, (err,r)=>{
-                if(r){
-                    userRole.findOne({user:this._id,role:r._id},(err,ur)=>{
-                        if(ur){
-                            resolve(false);
-                        }else{
-                            resolve(true);
-                        }
-                    });
-                } else{
-                    reject("Error, user or role does not exist");
-                }
-            });
-        });
+    async isNotA(roleName) {
+        try {
+            let r = await role.findOne({ name: roleName });
+            if (r) {
+                let ur = await userRole.findOne({ user: this._id, role: r._id });
+                return ur ? false : true;
+            } else {
+                throw new Error("Error, user or role does not exist");
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**
@@ -414,8 +333,8 @@ class HasRolesAndClaims {
     });
      ``` 
     */
-    isNotAn(roleName){
-       return this.isNotA(roleName);
+    async isNotAn(roleName) {
+        return await this.isNotA(roleName);
     }
 
     /**
@@ -429,34 +348,27 @@ class HasRolesAndClaims {
     });
      ```
      */
-    getRolesForUser(){
-        var result = [];
-        return new Promise ((resolve, reject)=>{
-            userRole.find({user: this._id},(err, roles)=>{
-            if (err){
-                reject(err);
-            } else if (roles.length < 1){
-                resolve(result);
-            }
-            else {
-                for (var item of roles){
-                    item.populate('role', (err, data)=>{
-                        if (err){
-                            reject(err);
-                        } else {
-                            result.push(data.role.name);
-                            if (roles[roles.length-1] == item){
-                                //return only when you've added every role
-                                //Node is non-blocking, so the engine will return an empty array if resolve(code) is place outside the for-loop
-                                resolve(result);
-                            }
-                        }
-                    });
+    async getRolesForUser() {
+        try {
+            var result = [];
+            let roles = await userRole.find({ user: this._id });
+            if (roles.length < 1) {
+                return result;
+            } else {
+                for (var item of roles) {
+                    let data = await item.populate('role');
+                    result.push(data.role.name);
+                    if (roles[roles.length - 1] == item) {
+                        //return only when you've added every role
+                        //Node is non-blocking, so the engine will return an empty array if resolve(code) is place outside the for-loop
+                        return result;
+                    }
                 }
             }
-        })
-    })
-}
+        } catch (error) {
+            throw error;
+        }
+    }
 
     /**
      * Returns a collection of Claims a User can perform
@@ -469,99 +381,66 @@ class HasRolesAndClaims {
     });
      ```
      */
-    getClaimsForUser(){
-        var result = [];
-        return new Promise ((resolve,reject)=>{
-            userRole.find({user:this._id},(err,userRoles)=>{
-                if(err){
-                    reject(err);
-                } else if (userRoles.length>=1){
-                    for(var userRole of userRoles){
-                        roleClaim.find({role:userRole.role},(err,roleClaims)=>{
-                            if(err){
-                                reject(err);
-                            }else if(roleClaims.length >= 1){
-                                for(var item of roleClaims){
-                                    item.populate('claim',(err,roleClm)=>{
-                                        if(err){
-                                            reject(err)
-                                        } else{
-                                            result.push(roleClm.claim.name);
-                                            if(roleClaims[roleClaims.length-1] == item){
-                                                userClaim.find({user:this._id},(err,userClaims)=>{
-                                                    if(err){
-                                                        reject(err);
-                                                    }else if (userClaims.length >= 1){
-                                                        for(var item of userClaims){
-                                                            item.populate('claim',(err,data)=>{
-                                                                if(err){
-                                                                    reject(err);
-                                                                } else{
-                                                                    result.push(data.claim.name);
-                                                                    if(userClaims[userClaims.length-1] == item){
-                                                                        resolve(result.filter(this.onlyUnique));
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-                                                    } else {
-                                                        resolve(result.filter(this.onlyUnique));
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });
-                                }
-                            } else {
-                                userClaim.find({user:this._id},(err,userClaims)=>{
-                                    if(err){
-                                        reject(err);
-                                    }else if (userClaims.length >= 1){
-                                        for(var item of userClaims){
-                                            item.populate('claim',(err,data)=>{
-                                                if(err){
-                                                    reject(err);
-                                                } else{
-                                                    result.push(data.claim.name);
-                                                    if(userClaims[userClaims.length-1] == item){
-                                                        resolve(result.filter(this.onlyUnique));
-                                                    }
-                                                }
-                                            });
+    async getClaimsForUser() {
+        try {
+            var result = [];
+            let userRoles = await userRole.find({ user: this._id });
+            if (userRoles.length >= 1) {
+                for (var userRole of userRoles) {
+                    let roleClaims = await roleClaim.find({ role: userRole.role });
+                    if (roleClaims.length >= 1) {
+                        for (var item of roleClaims) {
+                            let roleClm = await item.populate('claim');
+                            result.push(roleClm.claim.name);
+                            if (roleClaims[roleClaims.length - 1] == item) {
+                                let userClaims = await userClaim.find({ user: this._id });
+                                if (userClaims.length >= 1) {
+                                    for (var item of userClaims) {
+                                        let data = await item.populate('claim');
+                                        result.push(data.claim.name);
+                                        if (userClaims[userClaims.length - 1] == item) {
+                                            return result.filter(this.onlyUnique);
                                         }
                                     }
-                                });
+                                } else {
+                                    return result.filter(this.onlyUnique);
+                                }
                             }
-                        });
+                        }
+                    } else {
+                        let userClaims = await userClaim.find({ user: this._id });
+                        if (userClaims.length >= 1) {
+                            for (var item of userClaims) {
+                                let data = await item.populate('claim');
+                                result.push(data.claim.name);
+                                if (userClaims[userClaims.length - 1] == item) {
+                                    return result.filter(this.onlyUnique);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                let userClaims = await userClaim.find({ user: this._id });
+                if (userClaims.length >= 1) {
+                    for (var item of userClaims) {
+                        let data = await item.populate('claim');
+                        result.push(data.claim.name);
+                        if (userClaims[userClaims.length - 1] == item) {
+                            return result.filter(this.onlyUnique);
+                        }
                     }
                 } else {
-                    userClaim.find({user:this._id},(err,userClaims)=>{
-                        if(err){
-                            reject(err);
-                        }else if (userClaims.length >= 1){
-                            for(var item of userClaims){
-                                item.populate('claim',(err,data)=>{
-                                    if(err){
-                                        reject(err);
-                                    } else{
-                                        result.push(data.claim.name);
-                                        if(userClaims[userClaims.length-1] == item){
-                                            resolve(result.filter(this.onlyUnique));
-                                        }
-                                    }
-                                });
-                            }
-                        } else {
-                            resolve(result.filter(this.onlyUnique));
-                        }
-                    });
+                    return result.filter(this.onlyUnique);
                 }
-            });
-        });
+            }
+        } catch (error) {
+            throw error;
+        }
 
     }
 
-    onlyUnique(value, index, self) { 
+    onlyUnique(value, index, self) {
         return self.indexOf(value) === index;
     }
 }

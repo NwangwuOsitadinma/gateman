@@ -32,7 +32,7 @@ class GateMan {
             let newDbRole = await role.create({ name: roleName });
             return newDbRole;
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -49,7 +49,7 @@ class GateMan {
             if (typeof(roleName) !== 'string') throw new Error('role name must be a string');
             return await role.findOneAndDelete({name: roleName});
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }        
     }
 
@@ -68,7 +68,7 @@ class GateMan {
             let role = await role.findOne({name:roleName});
             return role;
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
     
@@ -143,7 +143,7 @@ class GateMan {
                 }
             }
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -167,7 +167,7 @@ class GateMan {
                 }
             }
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -183,7 +183,7 @@ class GateMan {
         try {
             return role.find({});
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -207,7 +207,7 @@ class GateMan {
                 return newDbClaim;
             }
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -264,7 +264,7 @@ class GateMan {
                 return roleClaims;
             }
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -309,7 +309,7 @@ class GateMan {
                 throw new Error("claim does not exist");
             }
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -338,7 +338,7 @@ class GateMan {
                 throw new Error("claim does not exist");
             }
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 }
