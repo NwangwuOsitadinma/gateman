@@ -39,9 +39,7 @@ class HasRolesAndClaims {
                     return usrClaim;
                 }
             } else {
-                throw new Error({
-                    message: "The claim does not exist. Consider creating it first"
-                });
+                throw new Error("The claim does not exist. Consider creating it first");
             }
         } catch (error) {
             throw error;
@@ -63,7 +61,7 @@ class HasRolesAndClaims {
             if (dbClaim) {
                 let uc = await userClaim.findOne({ user: this._id, claim: dbClaim._id });
                 if (uc) {
-                    await userClaim.delete({ user: this._id, claim: uc._id });
+                    await userClaim.findOneAndDelete({ user: this._id, claim: dbClaim._id });
                     return;
                 } else {
                     return "this claim was not assigned to the user";
@@ -96,7 +94,7 @@ class HasRolesAndClaims {
                 if (rc) {
                     return "this role was already assigned to the user";
                 } else {
-                    let usrRole = await userRole.create({ user: this._id, role: role._id });
+                    let usrRole = await userRole.create({ user: this._id, role: dbRole._id });
                     return usrRole;
                 }
             } else {
@@ -124,7 +122,7 @@ class HasRolesAndClaims {
             if (dbRole) {
                 let rc = await userRole.findOne({ user: this._id, role: dbRole._id });
                 if (rc) {
-                    await userRole.delete({ user: this._id, role: dbRole._id });
+                    await userRole.findOneAndDelete({ user: this._id, role: dbRole._id });
                     return;
                 } else {
                     return "this role was not assigned to the user";
@@ -156,8 +154,8 @@ class HasRolesAndClaims {
             let c = await claim.findOne({ name: claimName });
             if (c) {
                 let ur = await userRole.find({ user: this._id });
-                if (ur) {
-                    ur.forEach((u) => {
+                if (ur.length > 0) {
+                    for (let u of ur){
                         let rc = await roleClaim.findOne({ role: u.role, claim: c._id });
                         if (rc) {
                             return true;
@@ -165,13 +163,13 @@ class HasRolesAndClaims {
                             let uc = await userClaim.findOne({ user: u.user, claim: c._id });
                             return uc ? true : false;
                         }
-                    });
+                    }
                 } else {
-                    let uc = await userClaim.findOne({ user: u.user, claim: claimName });
+                    let uc = await userClaim.findOne({ user: this._id, claim: c._id });
                     return uc ? true : false;
                 }
             } else {
-                throw new Error("Error, user or claim does not exist");
+                throw new Error("Error, claim does not exist");
             }
         } catch (error) {
             throw error;
@@ -195,7 +193,7 @@ class HasRolesAndClaims {
             let c = await claim.findOne({ name: claimName });
             if (c) {
                 let urs = await userRole.find({ user: this._id });
-                if (urs) {
+                if (urs.length > 0) {
                     urs.forEach(async (ur) => {
                         let rc = await roleClaim.findOne({ role: ur.role, claim: c._id });
                         if (rc) {
@@ -206,7 +204,7 @@ class HasRolesAndClaims {
                         }
                     });
                 } else {
-                    let uc = await userClaim.findOne({ user: ur.user, claim: c._id });
+                    let uc = await userClaim.findOne({ user: this._id, claim: c._id });
                     return uc ? false : true;
                 }
             } else {
@@ -236,7 +234,7 @@ class HasRolesAndClaims {
                 let ur = await userRole.findOne({ user: this._id, role: r._id });
                 return ur ? true : false;
             } else {
-                throw new Error("Error, user or role does not exist");
+                throw new Error("Error, role does not exist");
             }
         } catch (error) {
             throw error;
@@ -318,8 +316,12 @@ class HasRolesAndClaims {
                 return result;
             } else {
                 for (var item of roles) {
-                    let data = await item.populate('role');
-                    result.push(data.role.name);
+                    let roler = await role.find({_id: item.role});
+                    if (roler.length > 0){
+                        result.push(roler[0].name)
+                    } else {
+                        return result;
+                    }
                     if (roles[roles.length - 1] == item) {
                         //return only when you've added every role
                         //Node is non-blocking, so the engine will return an empty array if resolve(code) is place outside the for-loop
@@ -346,18 +348,18 @@ class HasRolesAndClaims {
             var result = [];
             let userRoles = await userRole.find({ user: this._id });
             if (userRoles.length >= 1) {
-                for (var userRole of userRoles) {
+                for (let userRole of userRoles) {
                     let roleClaims = await roleClaim.find({ role: userRole.role });
                     if (roleClaims.length >= 1) {
                         for (var item of roleClaims) {
-                            let roleClm = await item.populate('claim');
-                            result.push(roleClm.claim.name);
+                            let roleClm = await claim.findOne({_id: item.claim});
+                            result.push(roleClm.name);
                             if (roleClaims[roleClaims.length - 1] == item) {
                                 let userClaims = await userClaim.find({ user: this._id });
                                 if (userClaims.length >= 1) {
                                     for (var item of userClaims) {
-                                        let data = await item.populate('claim');
-                                        result.push(data.claim.name);
+                                        let roleClm = await claim.findOne({_id: item.claim});
+                                        result.push(roleClm.name);
                                         if (userClaims[userClaims.length - 1] == item) {
                                             return result.filter(this.onlyUnique);
                                         }
@@ -371,8 +373,8 @@ class HasRolesAndClaims {
                         let userClaims = await userClaim.find({ user: this._id });
                         if (userClaims.length >= 1) {
                             for (var item of userClaims) {
-                                let data = await item.populate('claim');
-                                result.push(data.claim.name);
+                                let roleClm = await claim.findOne({_id: item.claim});
+                                result.push(roleClm.name);
                                 if (userClaims[userClaims.length - 1] == item) {
                                     return result.filter(this.onlyUnique);
                                 }
@@ -384,8 +386,8 @@ class HasRolesAndClaims {
                 let userClaims = await userClaim.find({ user: this._id });
                 if (userClaims.length >= 1) {
                     for (var item of userClaims) {
-                        let data = await item.populate('claim');
-                        result.push(data.claim.name);
+                        let roleClm = await claim.findOne({_id: item.claim});
+                        result.push(roleClm.name);
                         if (userClaims[userClaims.length - 1] == item) {
                             return result.filter(this.onlyUnique);
                         }
