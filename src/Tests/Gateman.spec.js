@@ -1,5 +1,6 @@
 var chai = require('chai');
 var should = chai.should();
+var expect = chai.expect;
 var mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
@@ -8,167 +9,145 @@ var GateMan = new gateman(mongoose);
 
 
 describe('Gateman Claims', function(){
-    beforeEach('ensuring the db is fresh',function(done){
+    before('ensuring the db is fresh',function(done){
         mongoose.connect('mongodb://localhost:27017/GateManTest',{useNewUrlParser: true});
-        GateMan.removeClaim('turn-water-into-wine')
-        .then((d)=>{})
-        .catch((err)=>{console.log(err)});
-        done()
+        done();
     });
-    afterEach('ensuring everything is cleaned up',function(done){
+    after('ensuring everything is cleaned up',function(done){
         mongoose.disconnect();
         done();
     });
 
-    describe('createClaim', function(){
-        it ('should return a claim object if created successfully',(done)=>{            
-            var c = 'turn-water-into-wine';   
-            GateMan.createClaim(c)
-            .then((claim)=>{
-                should.equal(claim.name,c);
-                done();
-            })
-            .catch((err)=>{
-                console.log(err)
-            });
+    describe('createClaim', function () {
+        it('should return a claim object if created successfully', async() => {
+            var c = 'turn-water-into-wine';
+            let claim = await GateMan.createClaim(c);
+            should.equal(claim.name, c);
         }).timeout(10000);
     });
-    describe('removeClaim',function(){
-        it('should not return anything if it actually deleted',(done)=>{
-            var c = 'turn-water-into-wine';
-            GateMan.createClaim(c)
-            .then((claim)=>{
-                return GateMan.removeClaim(claim.name)
-            })
-            .then((claim)=>{
-                return GateMan.getClaim(claim.name)
-            })
-            .then((claim)=>{
-                should.equal(claim,null);
-                done();
-            })
-            .catch((err)=>{
-                console.log(err)
-            });
 
+    describe('removeClaim', function(){
+        it('should not return anything if it actually deleted', async()=>{
+            var c = 'turn-water-into-wine';
+            let claim = await GateMan.createClaim(c);
+            await GateMan.removeClaim(claim.name);
+            let clm = await GateMan.getClaim(claim.name);
+            should.equal(clm,null);
         }).timeout(10000);
     });
 
     describe('getClaim',function(){
-        it('should return one valid claim',(done)=>{
+        it('should return one valid claim', async()=>{
             var c = 'turn-water-into-wine';
-            GateMan.createClaim(c)
-            .then((claim)=>{
-                return GateMan.getClaim(claim.name);
-            })
-            .then((claim)=>{
-                should.equal(claim.name,c);
-                done();
-            })
-            .catch((err)=>{
-                console.log(err)
-            });
+            let claim = await GateMan.createClaim(c);
+            await GateMan.getClaim(c);
+            should.equal(claim.name,c);
         }).timeout(10000);
     });
 
     describe('getClaims',function(){
-        it('should return a collection of claims with at least one member',(done)=>{
+        it('should return a collection of claims with at least one member', async()=>{
             var c = 'turn-water-into-wine';
-            GateMan.createClaim(c)
-            .then((claim)=>{
-                return GateMan.getClaims();
-            })
-            .then((claims)=>{
-                claims.should.not.be.empty
-                done()
-            })
-            .catch((err)=>{
-                console.log(err)
-            });
+            var c2 = 'claim2';
+            await GateMan.createClaim(c);
+            await GateMan.createClaim(c2);
+            let claims = await GateMan.getClaims();
+            claims.should.not.be.empty;
         }).timeout(10000);
     });
 
 });
 
 describe('Gateman Roles',function(){
-    beforeEach('ensuring db is fresh',(done)=>{
+    before('ensuring db is fresh',(done)=>{
         mongoose.connect('mongodb://localhost:27017/GateManTest',{useNewUrlParser: true});
-        GateMan.removeRole('admin')
-        .then((d)=>{})
-        .catch((err)=>{console.log(err)});
-        done()
+        done();
     });
-    afterEach('ensuring everything is cleaned up',function(done){
+    after('ensuring everything is cleaned up',function(done){
         mongoose.disconnect();
         done();
     });
     describe('createRole', function(){
-        it ('should return a role object if created successfully',(done)=>{            
-            var r = 'admin';   
-            GateMan.createRole(r)
-            .then((role)=>{
-                should.equal(role.name,r);
-                done();
-            })
-            .catch((err)=>{
-                console.log(err)
-            });
+        it ('should return a role object if created successfully', async()=>{            
+            var r = 'admin';
+            let role = await GateMan.createRole(r);
+            should.equal(role.name,r);
         }).timeout(10000);
     });
     describe('removeRole',function(){
-        it('should not return anything if it actually deleted',(done)=>{
-            var r = 'admin'; 
-            GateMan.createRole(r)
-            .then((role)=>{
-                return GateMan.removeRole(role.name)
-            })
-            .then((role)=>{
-                return GateMan.getRole(role.name)
-            })
-            .then((role)=>{
-                should.equal(role,null);
-                done();
-            })
-            .catch((err)=>{
-                console.log(err)
-            });
-
+        it('should not return anything if it actually deleted',async ()=>{
+            var r = 'roler'; 
+            let role = await GateMan.createRole(r);
+            await GateMan.removeRole(role.name);
+            let rol = await GateMan.getRole(role.name);
+            should.equal(rol, null);
         }).timeout(10000);
     });
 
     describe('getRole',function(){
-        it('should return one valid role',(done)=>{
+        it('should return one valid role', async()=>{
             var r = "admin";
-            GateMan.createRole(r)
-            .then((role)=>{
-                return GateMan.getRole(r);
-            })
-            .then((role)=>{
-                should.equal(role.name,r);
-                done()
-            })
-            .catch((err)=>{
-                console.log(err);
-            });
+            await GateMan.createRole(r)
+            let role = await GateMan.getRole(r);
+            should.equal(role.name,r);
         }).timeout(10000);
     });
 
     describe('getRoles',function(){
-        it('should return a collection of at least one valid role',(done)=>{
+        it('should return a collection of at least one valid role', async()=>{
             var r = "admin";
-            GateMan.createRole(r)
-            .then((role)=>{
-                return GateMan.getRoles();
-            })
-            .then((roles)=>{
-                roles.should.not.be.empty;
-                done();
-            })
-            .catch((err)=>{
-                console.log(err)
-            });
+            await GateMan.createRole(r);
+            let roles = await GateMan.getRoles();
+            roles.should.not.be.empty;
         }).timeout(10000)
-    })
-})
+    });
 
+    describe('Roles with claims', function(){
+        it('should return a role that has 2 claims', async()=>{
+            await GateMan.createRole('admin');
+            await GateMan.allow('admin').to('add');
+            await GateMan.allow('admin').to('delete');
+            let roleClaims = await GateMan.getRoleClaims('admin');
+            expect(roleClaims).to.be.an('array');
+            expect(roleClaims).to.have.members(['add','delete']);
+        });
 
+        it('should return a role that has no claims', async()=>{
+            await GateMan.createRole('teacher');
+            await GateMan.allow('teacher').to('add');
+            await GateMan.disallow('teacher').from('add');
+            let roleClaims = await GateMan.getRoleClaims('teacher');
+            expect(roleClaims).to.be.an('array');
+            expect(roleClaims).to.have.members([]);
+        });
+
+        it('should return true if role has claim', async ()=> {
+            await GateMan.createRole('manager');
+            await GateMan.createClaim('edit');
+            await GateMan.allow('manager').to('edit');
+            let hasClaim = await GateMan.role('manager').can('edit');
+            expect(hasClaim).to.be.true;
+        });
+
+        it('should return false if role does not have claim', async ()=> {
+            await GateMan.createRole('manager');
+            let hasClaim = await GateMan.role('manager').can('add');
+            expect(hasClaim).to.be.false;
+        });
+
+        it('should return false if role has claim', async ()=> {
+            await GateMan.createRole('manager');
+            await GateMan.createClaim('edit');
+            await GateMan.allow('manager').to('edit');
+            let hasClaim = await GateMan.role('manager').cannot('edit');
+            expect(hasClaim).to.be.false;
+        });
+
+        it('should return true if role does not have claim', async ()=> {
+            await GateMan.createRole('manager');
+            let hasClaim = await GateMan.role('manager').cannot('delete');
+            expect(hasClaim).to.be.true;
+        });
+
+    });
+});
