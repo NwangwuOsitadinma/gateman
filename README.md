@@ -88,8 +88,8 @@ let result = await gateman.role('rolename').can('claimname');
 It is important to set up your User model to extend the HasRolesAndClaims class from the gateman package.
 
 ```
-const mogoose = require('mongoose');
-const hasRolesAndClaims = require('gatemanjs').hasRolesAndClaims(mogoose);
+const mongoose = require('mongoose');
+const hasRolesAndClaims = require('gatemanjs').hasRolesAndClaims(mongoose);
 
 var UserSchema =  mongoose.Schema({
     name: String,
