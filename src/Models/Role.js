@@ -7,9 +7,9 @@ module.exports = (mongoose)=>{
             unique: true
         }
     });
-    if (mn.includes("Role")){
-        return mongoose.model("Role");
+    if (mn.includes("GatemanRole")){
+        return mongoose.model("GatemanRole");
     } else {
-        return mongoose.model("Role", RoleSchema);
+        return mongoose.model("GatemanRole", RoleSchema);
     }  
 }

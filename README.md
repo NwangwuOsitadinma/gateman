@@ -29,11 +29,7 @@ You have to create a role before using it in your application, Gateman provides 
 gateman.createRole(roleName);
 
 //Example
-gateman.createRole("admin").then((role)=>{
-        console.log(role);
-    }).catch((err)=>{
-        console.log(err);
-    });
+let role = await gateman.createRole("rolename");
 ```
 Creating claims is similar to creating roles
 
@@ -42,11 +38,7 @@ Creating claims is similar to creating roles
 gateman.createClaim(claimName);
 
 //Example
-gateman.createClaim("delete").then((claim)=>{
-        console.log(claim);
-    }).catch((err)=>{
-        console.log(err);
-    });
+let role = await gateman.createRole("claimname");
 ```
 
 ##### Note: To get a collection of existing roles, you can use
@@ -55,11 +47,7 @@ gateman.createClaim("delete").then((claim)=>{
 gateman.getRoles(callback);
 
 //Example
-gateman.getRoles().then(roles=>{
-    //roles is a collection of existing roles
-}).catch(err=>{
-    //err contains the error message, if any
-});
+let roles = await gateman.getRoles();
 ```
 
 ### Allowing members of a role to perform a claim
@@ -71,13 +59,8 @@ gateman.allow('role').to('claim'); //for an existing role
 You can also assign a claim to a role immediately after creating it
 
 ```
-gateman.createRole("admin").then(role=>{
-    gateman.allow("admin").to("delete").then(result=>{
-        //result is true if claim was assigned successfully
-    }).catch(err=>{
-        //err contains the error message, if any
-    });
-})
+let role = await gateman.createRole("admin");
+await gateman.allow("admin").to("delete");
 
 //this provides every member of the admin role the claim to delete
 ```
@@ -86,11 +69,7 @@ gateman.createRole("admin").then(role=>{
 Retracting claims from a role is very easy, you just need the rolename and claimname
 
 ```
-gateman.disallow('role').from('claim').then(result=>{
-    //result is true if claim was retracted
-}).catch(err=>{
-    //err contains any error message, if any
-});
+await gateman.disallow('role').from('claim');
 
 //Gateman does nothing if the role doesn't possess the claim
 ```
@@ -99,17 +78,9 @@ gateman.disallow('role').from('claim').then(result=>{
 Checking if a Claim has been assigned to a Role can be done this way
 
 ```
-gateman.role('rolename').can('claimname').then(result=>{
-    //result is true if the claim has been assigned, else it will be false
-});
+let result = await gateman.role('rolename').can('claimname');
+//result is true if the claim has been assigned, else it will be false
 
-//Checking for errors
-
-gateman.role('rolename').can('claimname').then(result=>{
-    //you can user result here
-}).catch(err=>{
-    //err contains error message if any
-});
 ```
 
 ### Using gateman with user models
@@ -117,8 +88,8 @@ gateman.role('rolename').can('claimname').then(result=>{
 It is important to set up your User model to extend the HasRolesAndClaims class from the gateman package.
 
 ```
-const mogoose = require('mongoose');
-const hasRolesAndClaims = require('gatemanjs').hasRolesAndClaims(mogoose);
+const mongoose = require('mongoose');
+const hasRolesAndClaims = require('gatemanjs').hasRolesAndClaims(mongoose);
 
 var UserSchema =  mongoose.Schema({
     name: String,
@@ -126,7 +97,7 @@ var UserSchema =  mongoose.Schema({
 });
 
 UserSchema.loadClass(hasRolesAndClaims);
-module.exports = mongoose.model('User',UserSchema)
+module.exports = mongoose.model('User', UserSchema)
 ```
 
 After setting up your user model, you can call gateman methods on your mongoose user model.
@@ -135,14 +106,8 @@ After setting up your user model, you can call gateman methods on your mongoose 
 ```
 //Example
 
- UserModel.findOne({name: "chioma"}, (err, user)=>{
-    user.allow("claim")
-        .then((userClaim)=>{
-            console.log(userClaim);
-        }).catch((err)=>{
-            console.log(err);
-        });
-    });
+ let user = await UserModel.findOne({name: "chioma"});
+ await user.allow("claim");
 
 /*
 The Gateman hasRolesAndClaims class is loaded into a valid mongoose model which means that the methods are only accessible to valid user objects.
@@ -150,14 +115,9 @@ The Gateman hasRolesAndClaims class is loaded into a valid mongoose model which 
 
 //Disallowing a user from performing a claim
 
-UserModel.findOne({name: "chioma"}, (err, user)=>{
-    user.disallow("claim")
-        .then((message)=>{
-            console.log(message);
-        }).catch((err)=>{
-            console.log(err);
-        });
-    });
+let user = await UserModel.findOne({name: "chioma"});
+await user.disallow("claim");
+
 ```
 
 ### Assigning a role to a user
@@ -165,14 +125,8 @@ Before assigning a role to a user, make sure it has been created.
 ```
 //Example
 
- UserModel.findOne({name: "chioma"}, (err, user)=>{
-    user.assign("role")
-        .then((userRole)=>{
-            console.log(userRole);
-        }).catch((err)=>{
-            console.log(err);
-        });
-    });
+ let user = await UserModel.findOne({name: "chioma"});
+ await user.assign("role");
 
 /*
 The Gateman hasRolesAndClaims class is loaded into a valid mongoose model which means that the methods are only accessible to valid user objects.
@@ -180,14 +134,9 @@ The Gateman hasRolesAndClaims class is loaded into a valid mongoose model which 
 
 //Retracting a role from a user
 
- UserModel.findOne({name: "chioma"}, (err, user)=>{
-    user.retract("role")
-        .then((message)=>{
-            console.log(message);
-        }).catch((err)=>{
-            console.log(err);
-        });
-    });
+let user = await UserModel.findOne({name: "chioma"});
+await user.retract("role");
+
 ```
 
 ### Checking for User claims and Roles
@@ -196,23 +145,19 @@ Gateman provides an easy way of verifying if a user belongs to a role or can per
 ```
 //To verify if a User belongs to a Role
 
-User.findOne({name: "chioma"}, (err, user)=>{
-        user.isA("role").then((userHasRole)=>{
-            if (userHasRole){
-                //user belongs to role
-            }
-        });
-    });
+let user = await User.findOne({name: "chioma"});
+let userHasRole = await user.isA("role");
+if (userHasRole){
+    //user belongs to role
+}
 
-//To verify if a User can perform an claim
+//To verify if a User can perform a claim
 
-User.findOne({name: "chioma"}, (err, user)=>{
-        user.can("claim").then((userHasClaim)=>{
-            if (userHasClaim){
-                //user can perform claim
-            }
-        });
-    });
+let user = await User.findOne({name: "chioma"});
+let userHasClaim = await user.can("claim");
+if (userHasClaim){
+    //user can perform claim
+}
 ```
 
 ### Retrieving User Roles and Claims
@@ -221,19 +166,15 @@ Gateman provides an easy way of retrieving a User's roles and/or claims
 ```
 //Returns a collection of Roles assigned to a User
 
-User.findOne({name: "chioma"}, (err, user)=>{
-     user.getRolesForUser().then((roles)=>{
-        console.log(roles);
-    });
-});
+let user = await User.findOne({name: "chioma"});
+let roles = await user.getRolesForUser();
+console.log(roles);
 
 //Returns a collection of Claims a User can perform
 
-User.findOne({name: "chioma"}, (err, user)=>{
-    user.getClaimsForUser().then((claims)=>{
-        console.log(claims);
-    });
-});
+let user = await User.findOne({name: "chioma"}, (err, user)=>{
+let claims = await user.getClaimsForUser();
+console.log(claims);
 ```
 
 ## Documentation

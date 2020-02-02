@@ -7,10 +7,10 @@ module.exports = (mongoose)=>{
                 unique: true
             }
         });
-        if (mn.includes("Claim")){
-            return mongoose.model('Claim');
+        if (mn.includes("GatemanClaim")){
+            return mongoose.model('GatemanClaim');
         } else {
-            return mongoose.model('Claim',ClaimSchema);
+            return mongoose.model('GatemanClaim',ClaimSchema);
         }
         
 }

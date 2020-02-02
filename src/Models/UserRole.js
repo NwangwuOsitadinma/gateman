@@ -8,12 +8,12 @@ module.exports = (mongoose)=>{
         role: {
             type: mongoose.Schema.Types.ObjectId,
             required: [true,'Sorry, the role is required'],
-            ref: 'Role'
+            ref: 'GatemanRole'
         }
     });
-    if (mn.includes("UserRole")){
-        return mongoose.model('UserRole');
+    if (mn.includes("GatemanUserRole")){
+        return mongoose.model('GatemanUserRole');
     } else {
-        return mongoose.model('UserRole',UserRoleSchema);
+        return mongoose.model('GatemanUserRole',UserRoleSchema);
     }  
 }
