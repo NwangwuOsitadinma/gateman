@@ -178,7 +178,7 @@ console.log(claims);
 ```
 
 ## Documentation
-* [Usage](http://htmlpreview.github.com/?https://github.com/NwangwuOsitadinma/gateman/blob/chaining/docs/index.html):   Gateman methods
+* [Usage](http://htmlpreview.github.com/?https://github.com/NwangwuOsitadinma/gateman/master/docs/out/index.html):   Gateman methods
 
 
 ## Contributing
