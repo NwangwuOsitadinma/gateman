@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: HasRolesAndClaims</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                    
+                        <h1 class="navbar-item">Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AllowOperations.html">AllowOperations</a></li><li><a href="DisallowOperations.html">DisallowOperations</a></li><li><a href="GateMan.html">GateMan</a></li><li><a href="HasRolesAndClaims.html">HasRolesAndClaims</a></li><li><a href="RoleOperations.html">RoleOperations</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Class</p>
+                        <h1>HasRolesAndClaims</h1>
+                    </header>
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>HasRolesAndClaims<span class="signature">(mongoose)</span><span class="type-signature"></span></h2>
+        
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <h3 class="title"><span>Constructor</span></h3>
+                <div class="members">
+                    <div class="member">
+
+    <h4 class="name" id="HasRolesAndClaims">
+        <a class="href-link" href="#HasRolesAndClaims">#</a>
+        
+        <span class="code-name">
+            
+                new HasRolesAndClaims<span class="signature">(mongoose)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        Provide a valid mongoose connection object that will be used to store application credentials
+    </div>
+
+    <h5>Parameters:</h5>
+    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+<tr class="deep-level-0">
+  
+      <td class="name"><code>mongoose</code></td>
+
+  <td class="type">
+  
+  </td>  
+
+  <td class="description last">A mongoose connection object</td>
+</tr>
+
+    </tbody>
+</table>
+
+<dl class="details">
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line13">line 13</a>
+            </span>
+        </p>
+    
+</dl>
+
+</div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+        <div class='vertical-section'>
+            <h3 class="title"><span>Methods</span></h3>
+            <div class="members">
+            
+                <div class="member">
+    
+    <h4 class="name" id="allow">
+        <a class="href-link" href="#allow">#</a>
+
+                <span class='tag'>async</span>
+
+        <span class="code-name">
+            
+                allow<span class="signature">(claimName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        allows a user perform a claim, does nothing if user already has the claim
+    </div>
+    
+    <h5>Parameters:</h5>
+    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+        
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+<tr class="deep-level-0">
+  
+      <td class="name"><code>claimName</code></td>
+  
+  <td class="type">
+      
+<span class="param-type">String</span>
+
+  </td>
+
+  <td class="description last">represents the claim  you want to assign to a user</td>
+</tr>
+
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line31">line 31</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span>
+        <br/><span class="kwd">await</span><span class="pln"> UserModel.allow("claimname"});</span></code></pre>
+
+</dl>
+
+</div>            
+                <div class="member">
+
+    <h4 class="name" id="assign">
+        <a class="href-link" href="#assign">#</a>
+        
+                <span class='tag'>async</span>
+            
+        <span class="code-name">
+            
+                assign<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        assigns a role to a user directly
+    </div>
+
+    <h5>Parameters:</h5> 
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+
+  <td class="type">
+      
+<span class="param-type">string</span>
+  
+  </td>
+
+  <td class="description last">represents the role you want to assign to a user</td>
+</tr>
+
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line90">line 90</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span><br/><span class="kwd">await</span><span class="pln"> user.assign("rolename");<span></code></pre>
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="can">
+        <a class="href-link" href="#can">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                can<span class="signature">(claimName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        checks whether a user has the ability to perform a claim
+    </div>
+    
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+<tr class="deep-level-0">
+  
+      <td class="name"><code>claimName</code></td>
+  
+  <td class="type">
+        
+<span class="param-type">string</span>
+  
+  </td>
+
+  <td class="description last">represents the claim name </td>
+</tr>
+
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line153">line 153</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span>
+        <br/><span class="kwd">let</span><span class="pln"> userHasClaim</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> user.can("claim");</span>
+        <br/><span class="kwd">if</span><span class="pln"> (userHasClaim) {<span>
+        <span class="kwd">console</span><span class="pun">.</span><span class="pln">log("I have the claim");<span><br/><span class="pln">}<span></code></pre>
+</dl>
+
+</div>
+            
+                <div class="member">
+    <h4 class="name" id="cannot">
+        <a class="href-link" href="#cannot">#</a>
+                <span class='tag'>async</span>
+        <span class="code-name">
+            
+                cannot<span class="signature">(claimName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    <div class="description">
+        checks whether a user does not have the ability to perform a claim
+    </div>
+    <h5>Parameters:</h5>
+    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>claimName</code></td>
+  
+  <td class="type">
+      
+<span class="param-type">string</span>
+  
+  </td>
+
+  <td class="description last">represents the claim name</td>
+</tr>
+    
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line192">line 192</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span>
+        <br/><span class="kwd">let</span><span class="pln"> noClaim</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> user.cannot("claim");</span>
+        <br/><span class="kwd">if</span><span class="pln"> (noClaim) {<span>
+        <span class="kwd">console</span><span class="pun">.</span><span class="pln">log("I do not have the claim");<span><br/><span class="pln">}<span></code></pre>
+
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="disallow">
+        <a class="href-link" href="#disallow">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                disallow<span class="signature">(claimName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        disallows a user from performing a particular claim
+    </div>
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+         
+<tr class="deep-level-0">
+  
+      <td class="name"><code>claimName</code></td>
+  
+
+  <td class="type">
+        
+<span class="param-type">string</span>
+  
+  </td>
+
+  <td class="description last">represents the claim you want to retract from a user
+#### Usage
+     ```
+     let user = await UserModel.findOne({name: "chioma"});
+     await user.disallow("claim");
+     ```</td>
+</tr>
+  
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line59">line 59</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span><br/><span class="kwd">await</span><span class="pln"> user.dissallow("claim");</span></code></pre>
+
+</dl>
+
+</div>
+            
+                <div class="member">
+
+    <h4 class="name" id="getClaimsForUser">
+        <a class="href-link" href="#getClaimsForUser">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getClaimsForUser<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    
+    <div class="description">
+        Returns a collection of Claims a User can perform
+    </div>
+    
+<dl class="details">
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line347">line 347</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span><br/><span class="kwd">let</span><span class="pln"> claims</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> user.getClaimsForUser();</span></code></pre>
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="getRolesForUser">
+        <a class="href-link" href="#getRolesForUser">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getRolesForUser<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        Returns a collection of Roles assigned to a User
+    </div>
+
+<dl class="details">
+
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line312">line 312</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span><br/><span class="kwd">let</span><span class="pln"> roles</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> user.getRolesForUser();</span></code></pre>
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="isA">
+        <a class="href-link" href="#isA">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                isA<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        checks if a user is a member of a role
+    </div>
+ 
+    <h5>Parameters:</h5>
+    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+
+  <td class="type">
+  
+<span class="param-type">string</span>
+  
+  </td>
+
+  <td class="description last">represents the role name</td>
+</tr>
+
+    </tbody>
+</table>
+
+<dl class="details">
+
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line231">line 231</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span>
+        <br/><span class="kwd">let</span><span class="pln"> userHasRole</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> user.isA("role");</span>
+        <br/><span class="kwd">if</span><span class="pln"> (userHasRole) {<span>
+        <span class="kwd">console</span><span class="pun">.</span><span class="pln">log("User belongs to role");<span><br/><span class="pln">}<span></code></pre>
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="isAn">
+        <a class="href-link" href="#isAn">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                isAn<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+
+    
+    <div class="description">
+        checks if a user is a member of a role
+    </div>
+    
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+  
+  <td class="type">
+  
+<span class="param-type">string</span>
+
+  </td>
+
+  <td class="description last">representing the role name</td>
+</tr>
+
+    </tbody>
+</table>
+
+<dl class="details">
+
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line257">line 257</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span>
+        <br/><span class="kwd">let</span><span class="pln"> userHasRole</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> user.isAn("role");</span>
+        <br/><span class="kwd">if</span><span class="pln"> (userHasRole) {<span>
+        <span class="kwd">console</span><span class="pun">.</span><span class="pln">log("User belongs to role");<span><br/><span class="pln">}<span></code></pre>
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="isNotA">
+        <a class="href-link" href="#isNotA">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                isNotA<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        checks if a user is not a member of a role
+    </div>
+
+    <h5>Parameters:</h5>
+    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+  </td>
+
+  <td class="description last">represents the role name </td>
+</tr>
+    
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line273">line 273</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span>
+        <br/><span class="kwd">let</span><span class="pln"> result</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> user.isNotA("role");</span>
+        <br/><span class="kwd">if</span><span class="pln"> (result) {<span>
+        <span class="kwd">console</span><span class="pun">.</span><span class="pln">log("User does not belong to role");<span><br/><span class="pln">}<span></code></pre>
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="isNotAn">
+        <a class="href-link" href="#isNotAn">#</a>
+        
+                <span class='tag'>async</span>
+            
+        <span class="code-name">
+            
+                isNotAn<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        checks if a user is not a member of a role
+    </div>
+    
+    <h5>Parameters:</h5>
+    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+  
+  <td class="type">
+  
+<span class="param-type">string</span>
+  
+  </td>
+
+  <td class="description last">represents the role name
+#### Usage
+     ```
+     let user = await User.findOne({name: "chioma"});
+     let result = await user.isNotAn("role");
+     if (result){
+        //user does not belongs to role
+     }
+     ```</td>
+</tr>
+    
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line299">line 299</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span>
+        <br/><span class="kwd">let</span><span class="pln"> result</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> user.isNotAn("role");</span>
+        <br/><span class="kwd">if</span><span class="pln"> (result) {<span>
+        <span class="kwd">console</span><span class="pun">.</span><span class="pln">log("User does not belong to role");<span><br/><span class="pln">}<span></code></pre>
+    
+</dl>
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="retract">
+        <a class="href-link" href="#retract">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                retract<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    
+    <div class="description">
+        retracts a role from a user directly
+    </div>
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+  </td>
+
+  <td class="description last">represents the role you want to retract from the user </td>
+</tr>
+    
+    </tbody>
+</table>
+
+<dl class="details">
+
+        <p class="tag-source">
+            <a href="HasRolesAndClaims.js.html" class="button">View Source</a>
+            <span>
+                <a href="HasRolesAndClaims.js.html">HasRolesAndClaims.js</a>, <a href="HasRolesAndClaims.js.html#line120">line 120</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> user</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> UserModel.findOne({name: "chioma"});</span><br/><span class="kwd">await</span><span class="pln"> user.retract("role");</span></code></pre>
+</dl>
+
+</div>
+            
+            </div>
+        </div>
+    
+</article>
+
+</section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Feb 07 2020 03:28:22 GMT+0100 (West Africa Standard Time)</p>
+        <p class="sidebar-created-by">
+            <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+            <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+        </p>
+    </div>
+</footer>
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

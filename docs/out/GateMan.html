@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: GateMan</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                    
+                        <h1 class="navbar-item">Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AllowOperations.html">AllowOperations</a></li><li><a href="DisallowOperations.html">DisallowOperations</a></li><li><a href="GateMan.html">GateMan</a></li><li><a href="HasRolesAndClaims.html">HasRolesAndClaims</a></li><li><a href="RoleOperations.html">RoleOperations</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Class</p>
+                        <h1>GateMan</h1>
+                    </header>
+                    
+                    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>GateMan<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <h3 class="title"><span>Constructor</span></h3>
+                <div class="members">
+                    <div class="member">
+
+
+    
+    <h4 class="name" id="GateMan">
+        <a class="href-link" href="#GateMan">#</a>
+        
+        <span class="code-name">
+            
+                new GateMan<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+
+    <div class="description">
+        Contains methods for managing application roles and claims<br/>
+        Provide a valid mongoose connection object that will be used to store application credentials
+    </div>
+
+<dl class="details">
+
+
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line15">line 15</a>
+            </span>
+        </p>
+    
+</dl>
+
+</div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+        <div class='vertical-section'>
+            <h3 class="title"><span>Methods</span></h3>
+            <div class="members">
+            
+                <div class="member">
+    
+    <h4 class="name" id="allow">
+        <a class="href-link" href="#allow">#</a>
+        
+        <span class="code-name">
+            
+                allow<span class="signature">(rolename)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        Allows members of a role to perform a claim
+    </div>
+    
+    <h5>Parameters:</h5>
+    
+<table class="params">
+    <thead>
+    <tr>
+        <th>Name</th>
+
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>rolename</code></td>
+  
+
+  <td class="type">
+<span class="param-type">String</span>
+  </td>
+  <td class="description last">the rolename</td>
+</tr>
+    
+    </tbody>
+</table>
+
+<dl class="details">
+
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line86">line 86</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p>
+<pre class="prettyprint prettyprinted" style=""><span class="kwd">await</span><span class="pln"> gateman.allow("rolename").to("claim");</span></code></pre>
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="createClaim">
+        <a class="href-link" href="#createClaim">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                createClaim<span class="signature">(claimName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    <div class="description">
+        Creates a new claim
+    </div>
+    
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+<tr class="deep-level-0">
+  
+      <td class="name"><code>claimName</code></td>
+
+  <td class="type">
+      
+<span class="param-type">String</span>
+  
+  </td>
+
+  <td class="description last">A string that represents the name of the claim</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+<dl class="details">
+
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line138">line 138</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">await</span><span class="pln"> gateman.createClaim("claimname");</span></code></pre>
+
+</dl>
+</div>
+            
+            <div class="member">
+
+    <h4 class="name" id="createRole">
+        <a class="href-link" href="#createRole">#</a>
+        
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                createRole<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        creates a new gateman role and returns the role
+    </div>
+    
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+  
+  </td>
+
+  <td class="description last">A string that represents the name of the role to be created</td>
+</tr>
+    
+    </tbody>
+</table>
+
+<dl class="details">
+
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line29">line 29</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">await</span><span class="pln"> gateman.createRole("rolename");</span></code></pre>
+
+</dl>
+
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="disallow">
+        <a class="href-link" href="#disallow">#</a>
+        
+        <span class="code-name">
+            
+                disallow<span class="signature">(rolename)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+
+    <div class="description">
+        Dissallows a member of a role from performing a claim
+    </div>
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>rolename</code></td>
+  
+  <td class="type">
+  
+<span class="param-type">String</span>
+
+  </td>
+
+  <td class="description last">the rolename</td>
+</tr>
+
+    </tbody>
+</table>
+<dl class="details">
+   
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line104">line 104</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">await</span><span class="pln"> gateman.disallow("rolename").from("claim");</span></code></pre>
+
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="getClaim">
+        <a class="href-link" href="#getClaim">#</a>
+
+                <span class='tag'>async</span>
+        
+        <span class="code-name">
+            
+                getClaim<span class="signature">(claimName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    <div class="description">
+        Returns one claim that matches the claimName given
+    </div>
+        <h5>Parameters:</h5>
+    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>claimName</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  <td class="description last">The name of the claim to find</td>
+</tr>    
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line186">line 186</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> claim</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> gateman.getClaim("claimname");</span></code></pre>
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+
+    <h4 class="name" id="getClaims">
+        <a class="href-link" href="#getClaims">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getClaims<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Returns all claims existing in the system
+    </div>
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line174">line 174</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> claims</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> gateman.getClaims();</span></code></pre>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getRole">
+        <a class="href-link" href="#getRole">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getRole<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        returns a gateman role specified by the name given
+    </div>
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  <td class="description last">A string that represents the name of the role to be returned</td>
+</tr>
+
+    </tbody>
+</table>
+
+<dl class="details">
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line67">line 67</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> result</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> gateman.getRole("rolename");<span></code></pre>
+    
+</dl>
+
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="getRoleClaims">
+        <a class="href-link" href="#getRoleClaims">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getRoleClaims<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        Returns an array of claims a role can perform
+    </div>
+
+    <h5>Parameters:</h5>    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+  
+  </td>
+
+  <td class="description last">represents the name of the role</td>
+</tr>
+    
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line198">line 198</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> roleClaims</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> gateman.getRoleClaims("rolename");</span></code></pre>
+
+</dl>
+
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="getRoles">
+        <a class="href-link" href="#getRoles">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getRoles<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        Returns existing roles in the system
+    </div>
+    
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line121">line 121</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> roles</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> gateman.getRoles();</span></code></pre>
+    
+</dl>
+</div>
+            
+                <div class="member">
+    
+    <h4 class="name" id="removeClaim">
+        <a class="href-link" href="#removeClaim">#</a>
+                <span class='tag'>async</span>
+        <span class="code-name">
+            
+                removeClaim<span class="signature">(claimName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    <div class="description">
+        Deletes an existing claim
+    </div>
+    <h5>Parameters:</h5>
+
+<table class="params">
+    <thead>
+    <tr>        
+        <th>Name</th>
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>claimName</code></td>  
+
+  <td class="type">
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  <td class="description last">A string that represents the name of the claim to be deleted </td>
+</tr>
+    
+    </tbody>
+</table>
+
+<dl class="details">
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line162">line 162</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">await</span><span class="pln"> gateman.removeClaim("claimname");</span></code></pre>
+    
+</dl>
+
+</div>            
+                <div class="member">
+
+    <h4 class="name" id="removeRole">
+        <a class="href-link" href="#removeRole">#</a>
+            
+                <span class='tag'>async</span>
+                    
+        <span class="code-name">
+            
+                removeRole<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+    <div class="description">
+        deletes an existing gateman role, does nothing if role does not exist
+    </div>
+    <h5>Parameters:</h5>
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+  
+  <td class="type">
+      
+<span class="param-type">String</span>
+
+  </td>
+  <td class="description last">A string that represents the name of the role to be removed</td>
+</tr>
+
+    </tbody>
+</table>
+<dl class="details">
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line50">line 50</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">await</span><span class="pln"> gateman.removeRole("rolename");</span></code></pre>
+    
+</dl>
+
+</div>            
+                <div class="member">
+
+    <h4 class="name" id="role">
+        <a class="href-link" href="#role">#</a>
+        
+        <span class="code-name">
+            
+                role<span class="signature">(roleName)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    <div class="description">
+        Checks if a Role can perform a Claim, must be used with `can`
+    </div>
+    <h5>Parameters:</h5>
+    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+        <th>Type</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+<tr class="deep-level-0">
+  
+      <td class="name"><code>roleName</code></td>
+  
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+  
+  </td>
+
+  <td class="description last">A string that represents the name of the role </td>
+</tr>
+
+    </tbody>
+</table>
+
+<dl class="details">
+    
+        <p class="tag-source">
+            <a href="GateMan.js.html" class="button">View Source</a>
+            <span>
+                <a href="GateMan.js.html">GateMan.js</a>, <a href="GateMan.js.html#line226">line 226</a>
+            </span>
+        </p>
+        <h5>Usage</h5>
+        <p class="code-caption"></p><pre class="prettyprint prettyprinted" style=""><code><span class="kwd">let</span><span class="pln"> result</span><span class="pun"> = </span><span class="kwd">await</span><span class="pln"> gateman.role("rolename").can("claim");</span></code></pre>
+    
+</dl>
+
+</div>
+            
+            </div>
+        </div>
+    
+
+</article>
+
+</section>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Feb 07 2020 03:28:22 GMT+0100 (West Africa Standard Time)</p>
+        <p class="sidebar-created-by">
+            <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+            <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+        </p>
+    </div>
+</footer>
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

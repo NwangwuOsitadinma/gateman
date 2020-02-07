@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: HasRolesAndClaims.js</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                    
+                        <h1 class="navbar-item">Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AllowOperations.html">AllowOperations</a></li><li><a href="DisallowOperations.html">DisallowOperations</a></li><li><a href="GateMan.html">GateMan</a></li><li><a href="HasRolesAndClaims.html">HasRolesAndClaims</a></li><li><a href="RoleOperations.html">RoleOperations</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Source</p>
+                        <h1>HasRolesAndClaims.js</h1>
+                    </header>
+                    
+                    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var userClaim = require('./Models/UserClaim');
+var userRole = require('./Models/UserRole');
+var role = require('./Models/Role');
+var roleClaim = require('./Models/RoleClaim');
+var claim = require('./Models/Claim');
+
+class HasRolesAndClaims {
+    /**
+     * Provide a valid mongoose connection object that will be used to store application credentials
+     * @constructor
+     * @param mongoose A mongoose connection object
+     */
+    constructor(mongoose) {
+        userClaim = userClaim(mongoose);
+        userRole = userRole(mongoose);
+        role = role(mongoose);
+        claim = claim(mongoose);
+        roleClaim = roleClaim(mongoose);
+    }
+
+    /**
+     * allows a user perform a claim, does nothing if user already has the claim
+     * @param claimName {String} represents the claim  you want to assign to a user
+     * #### Usage
+     ```
+     let user = await UserModel.findOne({name: "chioma"});
+     await user.allow("claim");
+     ```
+     */
+
+    async allow(claimName) {
+        try {
+            let dbClaim = await claim.findOne({ name: claimName });
+            if (dbClaim) {
+                let uc = await userClaim.findOne({ user: this._id, claim: dbClaim._id });
+                if (uc) {
+                    return "this claim was already assigned to the user";
+                } else {
+                    let usrClaim = await userClaim.create({ user: this._id, claim: dbClaim._id });
+                    return usrClaim;
+                }
+            } else {
+                throw new Error("The claim does not exist. Consider creating it first");
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * disallows a user from performing a particular claim
+     * @param claimName {string} represents the claim you want to retract from a user
+     * #### Usage
+     ```
+     let user = await UserModel.findOne({name: "chioma"});
+     await user.disallow("claim");
+     ```
+     */
+    async disallow(claimName) {
+        try {
+            let dbClaim = await claim.findOne({ name: claimName });
+            if (dbClaim) {
+                let uc = await userClaim.findOne({ user: this._id, claim: dbClaim._id });
+                if (uc) {
+                    await userClaim.findOneAndDelete({ user: this._id, claim: dbClaim._id });
+                    return;
+                } else {
+                    return "this claim was not assigned to the user";
+                }
+            } else {
+                throw new Error({
+                    message: "The claim does not exist. Consider creating it first"
+                });
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * assigns a role to a user directly
+     * @param roleName {string} represents the role you want to assign to a user
+     * #### Usage
+     ```
+     let user = await UserModel.findOne({name: "chioma"});
+     await user.assign("role");
+     ```
+     */
+
+    async assign(roleName) {
+        try {
+            let dbRole = await role.findOne({ name: roleName });
+            if (dbRole) {
+                let rc = await userRole.findOne({ user: this._id, role: dbRole._id });
+                if (rc) {
+                    return "this role was already assigned to the user";
+                } else {
+                    let usrRole = await userRole.create({ user: this._id, role: dbRole._id });
+                    return usrRole;
+                }
+            } else {
+                throw new Error({
+                    message: "The role does not exist. Consider creating it first"
+                });
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * retracts a role from a user directly
+     * @param roleName {string} represents the role you want to retract from the user 
+     * #### Usage
+     ```
+     let user = await UserModel.findOne({name: "chioma"});
+     await user.retract("role");
+     ```
+     */
+    async retract(roleName) {
+        try {
+            let dbRole = await role.findOne({ name: roleName });
+            if (dbRole) {
+                let rc = await userRole.findOne({ user: this._id, role: dbRole._id });
+                if (rc) {
+                    await userRole.findOneAndDelete({ user: this._id, role: dbRole._id });
+                    return;
+                } else {
+                    return "this role was not assigned to the user";
+                }
+            } else {
+                throw new Error({
+                    message: "The role does not exist. Consider creating it first"
+                });
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * checks whether a user has the ability to perform a claim
+     * @param claimName {string} represents the claim name 
+     * #### Usage
+     ```
+     let user = await User.findOne({name: "chioma"});
+     let userHasClaim = await user.can("claim");
+     if (userHasClaim) {
+        console.log('I have the claim');
+     }
+     ```
+     */
+    async can(claimName) {
+        try {
+            let c = await claim.findOne({ name: claimName });
+            if (c) {
+                let ur = await userRole.find({ user: this._id });
+                if (ur.length > 0) {
+                    for (let u of ur){
+                        let rc = await roleClaim.findOne({ role: u.role, claim: c._id });
+                        if (rc) {
+                            return true;
+                        } else {
+                            let uc = await userClaim.findOne({ user: u.user, claim: c._id });
+                            return uc ? true : false;
+                        }
+                    }
+                } else {
+                    let uc = await userClaim.findOne({ user: this._id, claim: c._id });
+                    return uc ? true : false;
+                }
+            } else {
+                throw new Error("Error, claim does not exist");
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * checks whether a user does not have the ability to perform a claim
+     * @param claimName {string} represents the claim name
+     * #### Usage
+     ```
+      let user = await User.findOne({name: "chioma"});
+      let noClaim = await user.cannot("claim");
+      if (noClaim){
+          console.log('I do not have the claim');
+      }
+     ```
+     */
+    async cannot(claimName) {
+        try {
+            let c = await claim.findOne({ name: claimName });
+            if (c) {
+                let urs = await userRole.find({ user: this._id });
+                if (urs.length > 0) {
+                    urs.forEach(async (ur) => {
+                        let rc = await roleClaim.findOne({ role: ur.role, claim: c._id });
+                        if (rc) {
+                            return false;
+                        } else {
+                            let uc = await userClaim.findOne({ user: ur.user, claim: c._id });
+                            return uc ? false : true;
+                        }
+                    });
+                } else {
+                    let uc = await userClaim.findOne({ user: this._id, claim: c._id });
+                    return uc ? false : true;
+                }
+            } else {
+                throw new Error("Error, user or claim does not exist");
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * checks if a user is a member of a role
+     * @param roleName {string} represents the role name
+     * #### Usage
+     ```
+     let user = await User.findOne({name: "chioma"});
+     let userHasRole = await user.isA("role");
+     if (userHasRole){
+        //user belongs to role
+      }
+     ```
+     */
+    async isA(roleName) {
+        try {
+            let r = await role.findOne({ name: roleName });
+            if (r) {
+                let ur = await userRole.findOne({ user: this._id, role: r._id });
+                return ur ? true : false;
+            } else {
+                throw new Error("Error, role does not exist");
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * checks if a user is a member of a role
+     * @param roleName {string} representing the role name
+     * #### Usage
+     ```
+     let user = await User.findOne({name: "chioma"});
+     let userHasRole = await user.isAn("role");
+     if (userHasRole){
+        //user belongs to role
+     }
+     ```
+     */
+    async isAn(roleName) {
+        return await this.isA(roleName);
+    }
+
+    /**
+     * checks if a user is not a member of a role
+     * @param roleName {string} represents the role name 
+     * #### Usage
+     ```
+     let user = await User.findOne({name: "chioma"});
+     let result = await user.isNotA("role");
+     if (result){
+        //user does not belongs to role
+     }
+     ```
+    */
+    async isNotA(roleName) {
+        try {
+            let r = await role.findOne({ name: roleName });
+            if (r) {
+                let ur = await userRole.findOne({ user: this._id, role: r._id });
+                return ur ? false : true;
+            } else {
+                throw new Error("Error, user or role does not exist");
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * checks if a user is not a member of a role
+     * @param roleName {string} represents the role name
+     * #### Usage
+     ```
+     let user = await User.findOne({name: "chioma"});
+     let result = await user.isNotAn("role");
+     if (result){
+        //user does not belongs to role
+     }
+     ``` 
+    */
+    async isNotAn(roleName) {
+        return await this.isNotA(roleName);
+    }
+
+    /**
+     * Returns a collection of Roles assigned to a User
+     * #### Usage
+     ```
+     let user = await User.findOne({name: "chioma"}, (err, user)=>{
+     let roles = await user.getRolesForUser();
+     console.log(roles);
+     ```
+     */
+    async getRolesForUser() {
+        try {
+            var result = [];
+            let roles = await userRole.find({ user: this._id });
+            if (roles.length &lt; 1) {
+                return result;
+            } else {
+                for (var item of roles) {
+                    let roler = await role.find({_id: item.role});
+                    if (roler.length > 0){
+                        result.push(roler[0].name)
+                    } else {
+                        return result;
+                    }
+                    if (roles[roles.length - 1] == item) {
+                        //return only when you've added every role
+                        //Node is non-blocking, so the engine will return an empty array if resolve(code) is place outside the for-loop
+                        return result;
+                    }
+                }
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Returns a collection of Claims a User can perform
+     * #### Usage
+     ```
+     let user = await User.findOne({name: "chioma"});
+     let claims = await user.getClaimsForUser();
+     console.log(claims);
+     ```
+     */
+    async getClaimsForUser() {
+        try {
+            var result = [];
+            let userRoles = await userRole.find({ user: this._id });
+            if (userRoles.length >= 1) {
+                for (let userRole of userRoles) {
+                    let roleClaims = await roleClaim.find({ role: userRole.role });
+                    if (roleClaims.length >= 1) {
+                        for (var item of roleClaims) {
+                            let roleClm = await claim.findOne({_id: item.claim});
+                            result.push(roleClm.name);
+                            if (roleClaims[roleClaims.length - 1] == item) {
+                                let userClaims = await userClaim.find({ user: this._id });
+                                if (userClaims.length >= 1) {
+                                    for (var item of userClaims) {
+                                        let roleClm = await claim.findOne({_id: item.claim});
+                                        result.push(roleClm.name);
+                                        if (userClaims[userClaims.length - 1] == item) {
+                                            return result.filter(this.onlyUnique);
+                                        }
+                                    }
+                                } else {
+                                    return result.filter(this.onlyUnique);
+                                }
+                            }
+                        }
+                    } else {
+                        let userClaims = await userClaim.find({ user: this._id });
+                        if (userClaims.length >= 1) {
+                            for (var item of userClaims) {
+                                let roleClm = await claim.findOne({_id: item.claim});
+                                result.push(roleClm.name);
+                                if (userClaims[userClaims.length - 1] == item) {
+                                    return result.filter(this.onlyUnique);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                let userClaims = await userClaim.find({ user: this._id });
+                if (userClaims.length >= 1) {
+                    for (var item of userClaims) {
+                        let roleClm = await claim.findOne({_id: item.claim});
+                        result.push(roleClm.name);
+                        if (userClaims[userClaims.length - 1] == item) {
+                            return result.filter(this.onlyUnique);
+                        }
+                    }
+                } else {
+                    return result.filter(this.onlyUnique);
+                }
+            }
+        } catch (error) {
+            throw error;
+        }
+
+    }
+
+    onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+    }
+}
+
+module.exports = HasRolesAndClaims;</code></pre>
+        </article>
+    </section>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Feb 07 2020 03:28:22 GMT+0100 (West Africa Standard Time)</p>
+        <p class="sidebar-created-by">
+            <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+            <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+        </p>
+    </div>
+</footer>
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
