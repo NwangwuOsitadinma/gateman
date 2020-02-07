@@ -7,7 +7,8 @@ var claim = require('./Models/Claim');
 class HasRolesAndClaims {
     /**
      * Provide a valid mongoose connection object that will be used to store application credentials
-     * @param {A mongoose connection object} mongoose 
+     * @constructor
+     * @param mongoose A mongoose connection object
      */
     constructor(mongoose) {
         userClaim = userClaim(mongoose);
