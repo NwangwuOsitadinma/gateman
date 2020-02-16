@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/NwangwuOsitadinma/gateman/master/docs/assets/gateman.jpeg" width="100%"/>
+<img src="https://raw.githubusercontent.com/NwangwuOsitadinma/gateman/master/docs/assets/gatema.jpeg" width="100%"/>
 
 # Gateman.js
 
