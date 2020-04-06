@@ -32,7 +32,9 @@ class RoleOperations {
                     let roleClm = await roleClaim.findOne({ role: dbRole._id, claim: dbClaim._id });
                     return roleClm ? true : false;
                 } else {
-                    return "role does not exist";
+                    throw new Error({
+                        message:"role does not exist"
+                    })
                 }
             } else {
                 throw new Error("claim does not exist");
@@ -61,7 +63,9 @@ class RoleOperations {
                     let roleClm = await roleClaim.findOne({ role: dbRole._id, claim: dbClaim._id });
                     return roleClm ? false : true;
                 } else {
-                    return "role does not exist";
+                    throw new Error({
+                        message:"role does not exist"
+                    })
                 }
             } else {
                 throw new Error("claim does not exist");
