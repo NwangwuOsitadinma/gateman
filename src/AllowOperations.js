@@ -32,10 +32,8 @@ class AllowOperations {
                     if (c.length > 0) {
                         let rlclm = await roleClaim.findOne({ role: dbRole._id, claim: c[0]._id });
                         if (rlclm) {
-                            throw new Error({
-                                message:"Claim has already been assigned to Role"
-                            })
-                          
+                            
+                            return "Claim has already been assigned to Role";
                         } else {
                             await roleClaim.create({ role: dbRole._id, claim: c[0]._id });
                             return;
