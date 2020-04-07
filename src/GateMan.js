@@ -137,7 +137,7 @@ class GateMan {
      */
     async createClaim(claimName) {
         try {
-            if (claimName === "") return "claim name cannot be empty";
+            if (claimName === "") throw new Error({message:"claim name cannot be empty"});
             let dbClaim = await claim.findOne({ name: claimName });
             if (dbClaim) {
                 return dbClaim;

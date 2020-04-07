@@ -19,14 +19,14 @@
     "url": "https://github.com/NwangwuOsitadinma/gateman/issues"
   },
   "homepage": "https://github.com/NwangwuOsitadinma/gateman#readme",
-  "dependencies": {
-    "mongoose": "^5.2.12"
-  },
   "devDependencies": {
     "better-docs": "^1.4.7",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "express": "^4.16.3",
     "mocha": "^6.1.4"
+  },
+  "dependencies": {
+    "mongoose": "^5.9.7"
   }
 }
