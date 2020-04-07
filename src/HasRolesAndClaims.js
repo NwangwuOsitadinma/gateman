@@ -33,9 +33,9 @@ class HasRolesAndClaims {
             let dbClaim = await claim.findOne({ name: claimName });
             if (dbClaim) {
                 let uc = await userClaim.findOne({ user: this._id, claim: dbClaim._id });
-                if (uc) {
+                if (!uc) {
                     throw new Error({
-                        message:"this claim was already assigned to the user";
+                        message:"this claim was already assigned to the user"
                     })
                 } else {
                     let usrClaim = await userClaim.create({ user: this._id, claim: dbClaim._id });
@@ -67,7 +67,9 @@ class HasRolesAndClaims {
                     await userClaim.findOneAndDelete({ user: this._id, claim: dbClaim._id });
                     return;
                 } else {
-                    return "this claim was not assigned to the user";
+                    throw new Error({
+                        message:"this claim was not assigned to the user"
+                    })
                 }
             } else {
                 throw new Error({
@@ -130,7 +132,9 @@ class HasRolesAndClaims {
                     await userRole.findOneAndDelete({ user: this._id, role: dbRole._id });
                     return;
                 } else {
-                    return "this role was not assigned to the user";
+                    throw new Error({
+                        message:"this role was not assigned to the user"
+                    })
                 }
             } else {
                 throw new Error({
