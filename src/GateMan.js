@@ -28,8 +28,8 @@ class GateMan {
      */
     async createRole(roleName) {
         try {
-            if (roleName.trim() === "") throw new Error("role name cannot be empty");
-            if (typeof(roleName) !== 'string') throw new Error("role name must be a string");
+            if (roleName.trim() === "") throw new Error({message:"role name cannot be empty", type:"gateman"});
+            if (typeof(roleName) !== 'string') throw new Error({message:"role name must be a string", type:"gateman"});
             let dbRole = await role.findOne({ name: roleName });
             if (dbRole) return dbRole;
             let newDbRole = await role.create({ name: roleName });
@@ -49,7 +49,7 @@ class GateMan {
      */
     async removeRole(roleName){
         try {
-            if (typeof(roleName) !== 'string') throw new Error('role name must be a string');
+            if (typeof(roleName) !== 'string') throw new Error({message:'role name must be a string', type:"gateman"});
             return await role.findOneAndDelete({name: roleName});
         } catch (error) {
             throw error;
@@ -67,7 +67,7 @@ class GateMan {
     async getRole(roleName){
         try {
             if (roleName.trim() === '') return {};
-            if (typeof(roleName) !== 'string') throw new Error('role name must be a string');
+            if (typeof(roleName) !== 'string') throw new Error({message:'role name must be a string', type:"gateman"});
             let rol = await role.findOne({name:roleName});
             return rol;
         } catch (error) {
@@ -85,8 +85,8 @@ class GateMan {
      */
     allow(rolename){
         let linker = new allowOps(role, claim, roleClaim);
-        if (rolename.trim() === '') throw new Error('role name must be provided');
-        if (typeof(rolename) !== 'string') throw new Error('role name must be a string');
+        if (rolename.trim() === '') throw new Error({message:'role name must be provided', type:"gateman"});
+        if (typeof(rolename) !== 'string') throw new Error({message:'role name must be a string', type:"gateman"});
         linker.operation = 'allow';
         linker.roler = rolename;
         return linker;
@@ -103,8 +103,8 @@ class GateMan {
      */
     disallow(rolename){
         let linker = new disallowOps(role, claim, roleClaim);
-        if (rolename.trim() === '') throw new Error('role name must be provided');
-        if (typeof(rolename) !== 'string') throw new Error('role name must be a string');
+        if (rolename.trim() === '') throw new Error({type:'role name must be provided', type:"gateman"});
+        if (typeof(rolename) !== 'string') throw new Error({type:'role name must be a string', type:"gateman"});
         linker.operation = 'dissallow';
         linker.roler = rolename;
         return linker;
@@ -137,7 +137,7 @@ class GateMan {
      */
     async createClaim(claimName) {
         try {
-            if (claimName === "") throw new Error({message:"claim name cannot be empty"});
+            if (claimName === "") throw new Error({message:"claim name cannot be empty", type:"gateman"});
             let dbClaim = await claim.findOne({ name: claimName });
             if (dbClaim) {
                 return dbClaim;
@@ -207,7 +207,7 @@ class GateMan {
                     if (i === roleClaims.length - 1) return result;
                 }
             } else {
-                throw new Error('role does not exist');
+                throw new Error({message:'role does not exist', type:"gateman"});
             }
         } catch (error) {
             throw error;
@@ -225,8 +225,8 @@ class GateMan {
      */
     role(roleName){
         let linker = new roleOps(role, claim, roleClaim);
-        if (roleName.trim() === '') throw new Error('role name must be provided');
-        if (typeof(roleName) !== 'string') throw new Error('role name must be a string');
+        if (roleName.trim() === '') throw new Error({message:'role name must be provided', type:"gatemen"});
+        if (typeof(roleName) !== 'string') throw new Error({messaqge:'role name must be a string', type:"gateman"});
         linker.roleName = roleName;
         return linker;
     }

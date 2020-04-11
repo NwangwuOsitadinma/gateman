@@ -35,14 +35,15 @@ class HasRolesAndClaims {
                 let uc = await userClaim.findOne({ user: this._id, claim: dbClaim._id });
                 if (!uc) {
                     throw new Error({
-                        message:"this claim was already assigned to the user"
+                        message:"this claim was already assigned to the user",
+                        type:"gateman"
                     })
                 } else {
                     let usrClaim = await userClaim.create({ user: this._id, claim: dbClaim._id });
                     return usrClaim;
                 }
             } else {
-                throw new Error("The claim does not exist. Consider creating it first");
+                throw new Error({message:"The claim does not exist. Consider creating it first", type:"gateman"});
             }
         } catch (error) {
             throw error;
@@ -68,12 +69,14 @@ class HasRolesAndClaims {
                     return;
                 } else {
                     throw new Error({
-                        message:"this claim was not assigned to the user"
+                        message:"this claim was not assigned to the user",
+                        type:"gateman"
                     })
                 }
             } else {
                 throw new Error({
-                    message: "The claim does not exist. Consider creating it first"
+                    message: "The claim does not exist. Consider creating it first",
+                    type:"gateman"
                 });
             }
         } catch (error) {
@@ -98,7 +101,8 @@ class HasRolesAndClaims {
                 let rc = await userRole.findOne({ user: this._id, role: dbRole._id });
                 if (rc) {
                     throw new Error({
-                        message:"this role was already assigned to the user"
+                        message:"this role was already assigned to the user",
+                        type:"gateman"
                     })
                 } else {
                     let usrRole = await userRole.create({ user: this._id, role: dbRole._id });
@@ -106,7 +110,8 @@ class HasRolesAndClaims {
                 }
             } else {
                 throw new Error({
-                    message: "The role does not exist. Consider creating it first"
+                    message: "The role does not exist. Consider creating it first",
+                    type:"gateman"
                 });
             }
         } catch (error) {
@@ -133,12 +138,14 @@ class HasRolesAndClaims {
                     return;
                 } else {
                     throw new Error({
-                        message:"this role was not assigned to the user"
+                        message:"this role was not assigned to the user",
+                        type:"gateman"
                     })
                 }
             } else {
                 throw new Error({
-                    message: "The role does not exist. Consider creating it first"
+                    message: "The role does not exist. Consider creating it first",
+                    type:"gateman"
                 });
             }
         } catch (error) {
@@ -178,7 +185,7 @@ class HasRolesAndClaims {
                     return uc ? true : false;
                 }
             } else {
-                throw new Error("Error, claim does not exist");
+                throw new Error({message:"Error, claim does not exist", type:"gateman"});
             }
         } catch (error) {
             throw error;
@@ -217,7 +224,7 @@ class HasRolesAndClaims {
                     return uc ? false : true;
                 }
             } else {
-                throw new Error("Error, user or claim does not exist");
+                throw new Error({message:"Error, user or claim does not exist", type:"gateman"});
             }
         } catch (error) {
             throw error;
@@ -243,7 +250,7 @@ class HasRolesAndClaims {
                 let ur = await userRole.findOne({ user: this._id, role: r._id });
                 return ur ? true : false;
             } else {
-                throw new Error("Error, role does not exist");
+                throw new Error({message:"Error, role does not exist", type:"gateman"});
             }
         } catch (error) {
             throw error;
@@ -285,7 +292,7 @@ class HasRolesAndClaims {
                 let ur = await userRole.findOne({ user: this._id, role: r._id });
                 return ur ? false : true;
             } else {
-                throw new Error("Error, user or role does not exist");
+                throw new Error({message:"Error, user or role does not exist", type:"gateman"});
             }
         } catch (error) {
             throw error;
