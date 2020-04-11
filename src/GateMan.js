@@ -35,7 +35,7 @@ class GateMan {
             let newDbRole = await role.create({ name: roleName });
             return newDbRole;
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -52,7 +52,7 @@ class GateMan {
             if (typeof(roleName) !== 'string') throw{message:'role name must be a string', type:"gateman"};
             return await role.findOneAndDelete({name: roleName});
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }        
     }
 
@@ -71,7 +71,7 @@ class GateMan {
             let rol = await role.findOne({name:roleName});
             return rol;
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
     
@@ -122,7 +122,7 @@ class GateMan {
         try {
             return role.find({});
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -146,7 +146,7 @@ class GateMan {
                 return newDbClaim;
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -210,7 +210,7 @@ class GateMan {
                 throw {message:'role does not exist', type:"gateman"};
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 

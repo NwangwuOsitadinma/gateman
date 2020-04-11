@@ -46,7 +46,7 @@ class HasRolesAndClaims {
                 throw {message:"The claim does not exist. Consider creating it first", type:"gateman"};
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -80,7 +80,7 @@ class HasRolesAndClaims {
                 };
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -115,7 +115,7 @@ class HasRolesAndClaims {
                 };
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -149,7 +149,7 @@ class HasRolesAndClaims {
                 };
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -188,7 +188,7 @@ class HasRolesAndClaims {
                 throw {message:"Error, claim does not exist", type:"gateman"};
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -227,7 +227,7 @@ class HasRolesAndClaims {
                 throw {message:"Error, user or claim does not exist", type:"gateman"};
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -253,7 +253,7 @@ class HasRolesAndClaims {
                 throw {message:"Error, role does not exist", type:"gateman"};
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -295,7 +295,7 @@ class HasRolesAndClaims {
                 throw {message:"Error, user or role does not exist", type:"gateman"};
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -346,7 +346,7 @@ class HasRolesAndClaims {
                 }
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
@@ -413,7 +413,7 @@ class HasRolesAndClaims {
                 }
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
 
     }

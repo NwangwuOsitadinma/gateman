@@ -54,7 +54,7 @@ class AllowOperations {
                 }
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 

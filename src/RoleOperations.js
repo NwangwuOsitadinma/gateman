@@ -73,7 +73,7 @@ class RoleOperations {
                 throw {message:"claim does not exist", type:"gateman"};
             }
         } catch (error) {
-            throw error;
+            throw {message:error, type:"mongoose"};
         }
     }
 
