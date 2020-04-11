@@ -50,7 +50,7 @@ class AllowOperations {
                         });
                     }
                 } else {
-                    throw new Error("role not found");
+                    throw new Error({message:"role not found", type:"gateman"});
                 }
             }
         } catch (error) {
