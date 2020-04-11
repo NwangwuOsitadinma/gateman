@@ -33,11 +33,12 @@ class RoleOperations {
                     return roleClm ? true : false;
                 } else {
                     throw new Error({
-                        message:"role does not exist"
+                        message:"role does not exist",
+                        type:"gateman"
                     })
                 }
             } else {
-                throw new Error("claim does not exist");
+                throw new Error({message:"claim does not exist", type:"gateman"});
             }
         } catch (error) {
             throw error;
@@ -64,11 +65,12 @@ class RoleOperations {
                     return roleClm ? false : true;
                 } else {
                     throw new Error({
-                        message:"role does not exist"
+                        message:"role does not exist",
+                        type:"gateman"
                     })
                 }
             } else {
-                throw new Error("claim does not exist");
+                throw new Error({message:"claim does not exist", type:"gateman"});
             }
         } catch (error) {
             throw error;
