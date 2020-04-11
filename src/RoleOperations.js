@@ -64,13 +64,13 @@ class RoleOperations {
                     let roleClm = await roleClaim.findOne({ role: dbRole._id, claim: dbClaim._id });
                     return roleClm ? false : true;
                 } else {
-                    throw new Error({
+                    throw {
                         message:"role does not exist",
                         type:"gateman"
-                    })
+                    }
                 }
             } else {
-                throw new Error({message:"claim does not exist", type:"gateman"});
+                throw {message:"claim does not exist", type:"gateman"};
             }
         } catch (error) {
             throw error;

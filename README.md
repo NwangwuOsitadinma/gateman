@@ -177,6 +177,21 @@ let claims = await user.getClaimsForUser();
 console.log(claims);
 ```
 
+### Error handling
+Gateman provides an efficient way to handle errors whether from the mongoose library or from the gateman library
+
+```
+try{
+    let user = await User.findOne({name: "chioma"}, (err, user)=>{
+    let claims = await user.getClaimsForUser();
+}catch(error){
+    //returns an error object specifying the error message and the error type
+    console.error(error.type); //this prints the error type either gateman or mongoose
+    console.error(error.message); //this prints the error message
+}
+
+```
+
 ## Documentation
 * [Usage](http://htmlpreview.github.com/?https://github.com/NwangwuOsitadinma/gateman/master/docs/out/index.html):   Gateman methods
 

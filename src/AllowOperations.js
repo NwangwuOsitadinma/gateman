@@ -39,10 +39,10 @@ class AllowOperations {
                         }
                     } else {
                         claim.create({ name: claimName }, (err, claimE) => {
-                            if (err) throw new Error({
+                            if (err) throw {
                                 message:"error creating claim",
                                 type:"mongoose"
-                            });
+                            };
                             roleClaim.create({ role: dbRole._id, claim: claimE._id }, function (err, roleClaim) {
                                 if (err) throw err;
                                 return;
@@ -50,7 +50,7 @@ class AllowOperations {
                         });
                     }
                 } else {
-                    throw new Error({message:"role not found", type:"gateman"});
+                    throw {message:"role not found", type:"gateman"};
                 }
             }
         } catch (error) {
